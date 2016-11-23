@@ -9,9 +9,24 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.lab3.MainActivity">
+<Button
+    android:id="@+id/CategoriesButton"
+    android:text="@string/categores"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />
 
-    <TextView
+    <Button
+        android:id="@+id/PhotosButton"
+        android:text="@string/Photos"
+        android:layout_below="@+id/CategoriesButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/StatisticsButton"
+        android:text="@string/Statistics"
+        android:layout_below="@+id/PhotosButton"
+        android:onClick="onShowStat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </RelativeLayout>

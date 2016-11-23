@@ -3,14 +3,14 @@ package com.lab3.domain;
 /**
  * Created by Александр on 13.11.2016.
  */
-
+//таблица ктегории
 public class Category {
+    private int Id;
     private String CategoryName;
-    private int  Record;
 
-    public Category(int record, String categoryName) {
-        Record = record;
+    public Category(int id, String categoryName) {
         CategoryName = categoryName;
+        Id = id;
     }
 
     public  Category(){}
@@ -23,11 +23,11 @@ public class Category {
         CategoryName = categoryName;
     }
 
-    public int getRecord() {
-        return Record;
+    public int getId() {
+        return Id;
     }
 
-    public void setRecord(int record) {
-        Record = record;
+    public void setId(int id) {
+        Id = id;
     }
 }

@@ -8,6 +8,7 @@ import java.util.List;
  */
 //комплесная запись в бд
 public class TimeRecord {
+    private  int Id;
     private Date StartDate;
     private Date EndDate;
     private String Description;
@@ -74,5 +75,13 @@ public class TimeRecord {
 
     public void setPhoto(List<Photo> photo) {
         this.photos = photo;
+    }
+
+    public int getId() {
+        return Id;
+    }
+
+    public void setId(int id) {
+        Id = id;
     }
 }
