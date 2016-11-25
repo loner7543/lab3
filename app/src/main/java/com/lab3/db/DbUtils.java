@@ -2,6 +2,7 @@ package com.lab3.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -69,6 +70,7 @@ public class DbUtils extends SQLiteOpenHelper {
         db.execSQL(CREATE_PHOTO_QUERY);
         db.execSQL(CREATE_TIMERECORD_QUERY);
         Log.d(LOG_TAG,"Table created sucs");
+        insertCatigories(db);
     }
 
     @Override
@@ -81,8 +83,29 @@ public class DbUtils extends SQLiteOpenHelper {
 
     }
 
+    public Cursor getAllRecords(SQLiteDatabase database, String tableName) {
+        Cursor cursor = database.query(tableName, null,null, null, null, null, null);
+        return  cursor;
+    }
+
     public long insertData(SQLiteDatabase database, ContentValues values, String table){
         long res =  database.insert(table,null,values);
         return res;
+    }
+
+    //content values вставляет щас лишь одну запись
+    public void insertCatigories(SQLiteDatabase database){
+        ContentValues data = new ContentValues();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CATEGORY_NAME,"Работа");
+        contentValues.put(CATEGORY_NAME,"Обед");
+        contentValues.put(CATEGORY_NAME,"Отдых");
+        contentValues.put(CATEGORY_NAME,"Уборка");
+        contentValues.put(CATEGORY_NAME,"Сон");
+        database.beginTransaction();
+        long res =  database.insert(DbUtils.CATEGORY_TABLE, null, contentValues);
+        Log.d(LOG_TAG,"InsertResult "+res);
+        database.setTransactionSuccessful();
+        database.endTransaction();
     }
 }
