@@ -4,9 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Александр on 13.11.2016.
+ * Created by alma0516 on 11/25/2016.
  */
-//комплесная запись в бд
+
 public class TimeRecord {
     private  int Id;
     private Date StartDate;
