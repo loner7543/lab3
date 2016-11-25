@@ -5,13 +5,6 @@ package com.lab3.domain;
  */
 
 public class Photo {
-    public int getId() {
-        return Id;
-    }
-
-    public void setId(int id) {
-        Id = id;
-    }
 
     private  int Id;
     private byte[] Image;
@@ -35,5 +28,13 @@ public class Photo {
 
     public Photo(byte[] image) {
         Image = image;
+    }
+
+    public int getId() {
+        return Id;
+    }
+
+    public void setId(int id) {
+        Id = id;
     }
 }

@@ -30,9 +30,12 @@ public class DbUtils extends SQLiteOpenHelper {
 
     //таблица с отметками времени
     public static final String TIME_ID = "ID";//первичный ключ глав таблицы время
-    public static final String PHOTO_ID_REF = "PHOTO_ID";
-    public static String CATEGORY_ID_REF = "CATEGORY_ID";
-
+    public static final String PHOTO_ID_REF = "PHOTO_ID";//id  фотографии
+    public static final String CATEGORY_ID_REF = "CATEGORY_ID";// id категории
+    public static final String DDESCRIPTION = "DDESCRIPTION";
+    public static final String START_TIME = "START_TIME";
+    public static final String END_TIME = "END_TIME";
+    public static final String TIME_SEGMENT = "TIME_SEGMENT";
 
     //Запросы на создание таблиц, взятые из sqliteBrowser(я не хочу чтоб у меня что то слетело -брал оттуда)
     public static final String CREATE_CATEGORY_QUERY = "CREATE TABLE `Category` (\n" +
@@ -43,7 +46,15 @@ public class DbUtils extends SQLiteOpenHelper {
             "\t`ID`\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n" +
             "\t`IMAGE`\tBLOB\n" +
             ");";
-    public static final String CREATE_TIMERECORD_QUERY = "";
+    public static final String CREATE_TIMERECORD_QUERY = "CREATE TABLE `TimeRecord` (\n" +
+            "\t`ID`\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n" +
+            "\t`PHOTO_ID`\tINTEGER,\n" +
+            "\t`CATEGORY_ID`\tINTEGER,\n" +
+            "\t`DDESCRIPTION`\tTEXT,\n" +
+            "\t`START_TIME`\tTEXT,\n" +
+            "\t`END_TIME`\tTEXT,\n" +
+            "\t`TIME_SEGMENT`\tINTEGER\n" +
+            ");";
 
     public String sqlQuery = "";//cтрока для запросов
 
@@ -56,6 +67,8 @@ public class DbUtils extends SQLiteOpenHelper {
         Log.d(LOG_TAG,"Databse create called");
         db.execSQL(CREATE_CATEGORY_QUERY);
         db.execSQL(CREATE_PHOTO_QUERY);
+        db.execSQL(CREATE_TIMERECORD_QUERY);
+        Log.d(LOG_TAG,"Table created sucs");
     }
 
     @Override
