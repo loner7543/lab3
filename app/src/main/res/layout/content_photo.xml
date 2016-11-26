@@ -23,6 +23,7 @@
     <Button
         android:id="@+id/addPhoto"
         android:text="@string/add_btn"
+        android:onClick="onAddPhoto"
         android:layout_below="@+id/photoList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -31,6 +32,7 @@
         android:id="@+id/deletePhoto"
         android:layout_below="@+id/photoList"
         android:layout_toRightOf="@+id/addPhoto"
+        android:onClick="onDeletePhoto"
         android:text="@string/delete_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

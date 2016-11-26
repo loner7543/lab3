@@ -98,5 +98,9 @@
     <string name="time">Отметки времени</string>
     <string name="title_activity_photo">PhotoActivity</string>
     <string name="add_btn">Добавить</string>
+    <string name="editBtn">Изменить</string>
+    <string name="addCategory_hint">Введите название категории</string>
+    <string name="add_category_title">Добавить категорию</string>
+    <string name="edit_category_title">Изменить категорию</string>
     <string name="delete_btn">Удалить</string>
 </resources>

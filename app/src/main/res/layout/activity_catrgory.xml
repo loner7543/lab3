@@ -12,11 +12,37 @@
 
     <ListView
         android:id="@+id/category_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="13dp">
     </ListView>
 
+    <Button
+        android:id="@+id/addCategory"
+        android:text="@string/add_btn"
+        android:onClick="onAddCategory"
+        android:layout_below="@+id/category_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <Button
+        android:id="@+id/editCategory"
+        android:text="@string/editBtn"
+        android:layout_below="@+id/category_list"
+        android:layout_toRightOf="@+id/addCategory"
+        android:onClick="onEditCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/deleteCategory"
+        android:text="@string/delete_btn"
+        android:layout_toRightOf="@+id/editCategory"
+        android:onClick="onDeleteCategory"
+        android:layout_below="@+id/category_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </RelativeLayout>

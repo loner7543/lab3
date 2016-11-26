@@ -70,7 +70,11 @@ public class DbUtils extends SQLiteOpenHelper {
         db.execSQL(CREATE_PHOTO_QUERY);
         db.execSQL(CREATE_TIMERECORD_QUERY);
         Log.d(LOG_TAG,"Table created sucs");
-        insertCatigories(db);
+        insertCatigories(db,"Coн");
+        insertCatigories(db,"Уборка");
+        insertCatigories(db,"Работа");
+        insertCatigories(db,"Гулял с котом");
+
     }
 
     @Override
@@ -94,14 +98,9 @@ public class DbUtils extends SQLiteOpenHelper {
     }
 
     //content values вставляет щас лишь одну запись
-    public void insertCatigories(SQLiteDatabase database){
-        ContentValues data = new ContentValues();
+    public void insertCatigories(SQLiteDatabase database,String data){
         ContentValues contentValues = new ContentValues();
-        contentValues.put(CATEGORY_NAME,"Работа");
-        contentValues.put(CATEGORY_NAME,"Обед");
-        contentValues.put(CATEGORY_NAME,"Отдых");
-        contentValues.put(CATEGORY_NAME,"Уборка");
-        contentValues.put(CATEGORY_NAME,"Сон");
+        contentValues.put(CATEGORY_NAME,data);
         database.beginTransaction();
         long res =  database.insert(DbUtils.CATEGORY_TABLE, null, contentValues);
         Log.d(LOG_TAG,"InsertResult "+res);

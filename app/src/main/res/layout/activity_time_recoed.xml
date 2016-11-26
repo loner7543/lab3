@@ -18,15 +18,26 @@
     <Button
         android:id="@+id/addTime"
         android:layout_below="@+id/timeRecord_list"
+        android:onClick="addRecord"
         android:text="@string/add_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/editRecord"
+        android:layout_below="@+id/timeRecord_list"
+        android:layout_toRightOf="@+id/addTime"
+        android:text="@string/delete_btn"
+        android:onClick="EditRecord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/deleteTime"
         android:text="@string/delete_btn"
+        android:onClick="deleteRecord"
         android:layout_below="@+id/timeRecord_list"
-        android:layout_toRightOf="@+id/addTime"
+        android:layout_toRightOf="@+id/editRecord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </RelativeLayout>

@@ -29,6 +29,15 @@ public class TimeRecord {
 
     }
 
+    public TimeRecord(Date endDate, String description, com.lab3.domain.Category category, String otr, List<Photo> photos, Date startDate) {
+        EndDate = endDate;
+        Description = description;
+        Category = category;
+        Otr = otr;
+        this.photos = photos;
+        StartDate = startDate;
+    }
+
     public Date getStartDate() {
         return StartDate;
     }

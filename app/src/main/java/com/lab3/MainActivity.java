@@ -39,10 +39,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onShowPhoto(View view){
-
+        LaunchIntent = new Intent(this,PhotoActivity.class);
+        startActivity(LaunchIntent);
     }
 
     public void onShowTimeRecords(View view){
-
+        LaunchIntent = new Intent(this,TimeRecoed.class);
+        startActivity(LaunchIntent);
     }
 }

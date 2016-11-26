@@ -13,6 +13,10 @@ public class Category {
         Id = id;
     }
 
+    public Category(String categoryName) {
+        CategoryName = categoryName;
+    }
+
     public  Category(){}
 
     public String getCategoryName() {
@@ -29,5 +33,10 @@ public class Category {
 
     public void setId(int id) {
         Id = id;
+    }
+
+    @Override
+    public String toString() {
+        return CategoryName;
     }
 }
