@@ -6,6 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.ListView;
+
+import com.lab3.domain.Category;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by alma0516 on 11/25/2016.
@@ -70,10 +76,10 @@ public class DbUtils extends SQLiteOpenHelper {
         db.execSQL(CREATE_PHOTO_QUERY);
         db.execSQL(CREATE_TIMERECORD_QUERY);
         Log.d(LOG_TAG,"Table created sucs");
-        insertCatigories(db,"Coн");
-        insertCatigories(db,"Уборка");
-        insertCatigories(db,"Работа");
-        insertCatigories(db,"Гулял с котом");
+        insertCatigories(db,new Category("Coн"));
+        insertCatigories(db,new Category("Уборка"));
+        insertCatigories(db,new Category("Работа"));
+        insertCatigories(db,new Category("Гялял с котом"));
 
     }
 
@@ -98,13 +104,50 @@ public class DbUtils extends SQLiteOpenHelper {
     }
 
     //content values вставляет щас лишь одну запись
-    public void insertCatigories(SQLiteDatabase database,String data){
+    public void insertCatigories(SQLiteDatabase database,Category data){
         ContentValues contentValues = new ContentValues();
-        contentValues.put(CATEGORY_NAME,data);
+        contentValues.put(CATEGORY_NAME,data.getCategoryName());
         database.beginTransaction();
         long res =  database.insert(DbUtils.CATEGORY_TABLE, null, contentValues);
         Log.d(LOG_TAG,"InsertResult "+res);
         database.setTransactionSuccessful();
         database.endTransaction();
+    }
+
+    public int update(SQLiteDatabase database,String tableName,ContentValues contentValues,String fieldCause, String[] whereArgs){
+        int updCount = database.update(tableName, contentValues, fieldCause+"= ?", whereArgs);
+        return updCount;
+    }
+
+    public int getIdByName(String name,SQLiteDatabase database){
+        int res = 0;
+        for (Category c:getall(database,CATEGORY_TABLE)){
+            if(c.getCategoryName().equals(name)){
+                res = c.getId();
+            }
+        }
+        return res;
+    }
+
+    public List<Category> getall(SQLiteDatabase database,String table){
+        List<Category> result = new LinkedList<>();
+        Cursor cursor = database.query(table, null,null, null, null, null, null);
+        int i = 0;
+        String name;
+        int id;
+        Category category;
+        if (cursor != null && cursor.moveToFirst()) {
+            int idIdx = cursor.getColumnIndex(DbUtils.CATEGORY_ID);
+            int categoryIdx = cursor.getColumnIndex(DbUtils.CATEGORY_NAME);
+            do {
+                id = cursor.getInt(idIdx);
+                name = cursor.getString(categoryIdx);
+                category = new Category(id,name);
+                result.add(category);
+                i++;
+            }
+            while (cursor.moveToNext());
+        }
+        return result;
     }
 }

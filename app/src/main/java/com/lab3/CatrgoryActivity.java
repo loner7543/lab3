@@ -29,13 +29,13 @@ public class CatrgoryActivity extends AppCompatActivity implements AdapterView.O
     private SQLiteDatabase database;
     private DbUtils utils;
     private Category selectedCategory;
-    private Category oldCategory;
     private String title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catrgory);
+        setTitle("Категории");
         utils = new DbUtils(this, DbUtils.DATABASE_NAME, DbUtils.DATABASE_VERSION);
         database = utils.getWritableDatabase();//дает бд на запись
         listView = (ListView) findViewById(R.id.category_list);
@@ -47,15 +47,16 @@ public class CatrgoryActivity extends AppCompatActivity implements AdapterView.O
         listView.setAdapter(adapter);
     }
 
-    //закинуть id
     public void parseCursor(Cursor cursor) {
         String name;
-        int id = 2;
+        int id;
         Category category;
         int i = 0;
         if (cursor != null && cursor.moveToFirst()) {
+            int idIdx = cursor.getColumnIndex(DbUtils.CATEGORY_ID);
             int categoryIdx = cursor.getColumnIndex(DbUtils.CATEGORY_NAME);
             do {
+                id = cursor.getInt(idIdx);
                 name = cursor.getString(categoryIdx);
                 category = new Category(id,name);
                 lst.add(category);
@@ -68,8 +69,7 @@ public class CatrgoryActivity extends AppCompatActivity implements AdapterView.O
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        int position = i;
-        selectedCategory = adapter.getItem(position);
+        selectedCategory = adapter.getItem(i);
     }
 
     public void onAddCategory(View view){
@@ -88,6 +88,7 @@ public class CatrgoryActivity extends AppCompatActivity implements AdapterView.O
         adapter.notifyDataSetChanged();
     }
 
+    //пишешь в бд, по имени тянешь ид и потом обновляешь ад
     public void onCreateDialolg(String text, final int action,String title){
         LayoutInflater layoutInflater = LayoutInflater.from(CatrgoryActivity.this);
         View promptView = layoutInflater.inflate(R.layout.dialog_add_category, null);
@@ -104,13 +105,19 @@ public class CatrgoryActivity extends AppCompatActivity implements AdapterView.O
                                     String category = editText.getText().toString();
                                     adapter.add(new Category(category));
                                     adapter.notifyDataSetChanged();
-                                    utils.insertCatigories(database,category);
+                                    utils.insertCatigories(database,new Category(category));
                                     dialog.cancel();
                                 }
                                 else {
-                                    String newCategory ="";
-                                    oldCategory = selectedCategory;
-                                    adapter.remove(oldCategory);
+                                    String newCategory = editText.getText().toString();
+                                    adapter.remove(selectedCategory);
+                                    ContentValues contentValues = new ContentValues();
+                                    contentValues.put(DbUtils.CATEGORY_NAME,newCategory);
+                                    int pldId = utils.getIdByName(selectedCategory.getCategoryName(),database);
+                                    Category newObject = new Category(pldId,newCategory);
+                                    adapter.add(newObject);
+                                   int res =  utils.update(database,DbUtils.CATEGORY_TABLE,contentValues,DbUtils.CATEGORY_ID,new String[]{String.valueOf(pldId)});
+                                    dialog.cancel();
                                 }
 
                             }
