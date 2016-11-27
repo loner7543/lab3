@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.lab3.TimeRecoed">
+    tools:context="com.lab3.TimeRecordActivity">
 
     <ListView
         android:id="@+id/timeRecord_list"
@@ -27,7 +27,7 @@
         android:id="@+id/editRecord"
         android:layout_below="@+id/timeRecord_list"
         android:layout_toRightOf="@+id/addTime"
-        android:text="@string/delete_btn"
+        android:text="@string/editBtn"
         android:onClick="EditRecord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

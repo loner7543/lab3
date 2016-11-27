@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/desc"
+        android:text="@string/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_toRightOf="@+id/desc"
+        android:layout_marginLeft="15dp"
+        android:id="@+id/desc_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/start_time"
+        android:text="@string/startDate"
+        android:layout_below="@id/desc_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/start_time_value"
+        android:layout_toRightOf="@+id/start_time"
+        android:layout_width="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_below="@+id/desc"
+        android:layout_height="wrap_content" />
+
+    <!--категория-->
+    <TextView
+        android:id="@+id/category"
+        android:layout_below="@+id/start_time_value"
+        android:text="@string/category_str"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/category_value"
+        android:layout_below="@+id/start_time_value"
+        android:layout_toRightOf="@id/category"
+        android:layout_marginLeft="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/end_time"
+        android:text="@string/end_date"
+        android:layout_below="@+id/category_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/etv"
+        android:layout_below="@+id/category_value"
+        android:layout_toRightOf="@+id/end_time"
+        android:layout_width="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/segment"
+        android:text="@string/segment"
+        android:layout_below="@+id/etv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/segment_value"
+        android:layout_below="@+id/etv"
+        android:layout_toRightOf="@+id/segment"
+        android:layout_marginLeft="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/photo"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/segment_value"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

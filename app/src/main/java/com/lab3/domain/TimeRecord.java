@@ -9,14 +9,14 @@ import java.util.List;
 
 public class TimeRecord {
     private  int Id;
-    private Date StartDate;
-    private Date EndDate;
+    private String StartDate;
+    private String EndDate;
     private String Description;
     private Category Category;
     private String Otr;
     private List<Photo> photos;
 
-    public TimeRecord(Date startDate, Date endDate, String description, com.lab3.domain.Category category, List<Photo> photo, String otr) {
+    public TimeRecord(String startDate, String endDate, String description, com.lab3.domain.Category category, List<Photo> photo, String otr) {
         StartDate = startDate;
         EndDate = endDate;
         Description = description;
@@ -25,32 +25,37 @@ public class TimeRecord {
         Otr = otr;
     }
 
-    public TimeRecord(){
-
+    public TimeRecord(String description) {
+        Description = description;
     }
 
-    public TimeRecord(Date endDate, String description, com.lab3.domain.Category category, String otr, List<Photo> photos, Date startDate) {
+    public TimeRecord(int id, String startDate, String endDate, String description, com.lab3.domain.Category category, String otr, List<Photo> photos) {
+        Id = id;
+        StartDate = startDate;
         EndDate = endDate;
         Description = description;
         Category = category;
         Otr = otr;
         this.photos = photos;
-        StartDate = startDate;
     }
 
-    public Date getStartDate() {
+    public TimeRecord(){
+
+    }
+
+    public String getStartDate() {
         return StartDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(String startDate) {
         StartDate = startDate;
     }
 
-    public Date getEndDate() {
+    public String getEndDate() {
         return EndDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(String endDate) {
         EndDate = endDate;
     }
 

@@ -13,6 +13,7 @@ import com.lab3.DbBitmapUtility;
 import com.lab3.R;
 import com.lab3.domain.Category;
 import com.lab3.domain.Photo;
+import com.lab3.domain.TimeRecord;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -191,4 +192,91 @@ public class DbUtils extends SQLiteOpenHelper {
         int res =  database.delete (table, causeColumn+"=?", causeArgs);
         return res;
     }
+
+    public void initTimeTable(TimeRecord timeRecord,SQLiteDatabase database){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(PHOTO_ID_REF,1);
+        contentValues.put(CATEGORY_ID_REF,1);
+        contentValues.put(START_TIME,"11.12.12");
+        contentValues.put(END_TIME,"11.12.13");
+        contentValues.put(TIME_SEGMENT,10);
+        contentValues.put(DDESCRIPTION,"asdf");
+        insertData(database,contentValues,TIME_RECORD_TABLE);
     }
+
+    //TODO фотки пока пустые надо делать развязку
+    public List<TimeRecord> getAllTimes(SQLiteDatabase database){
+        List<TimeRecord> res = new LinkedList<>();
+        TimeRecord timeRecord;
+        List<Photo> photoRecord = new LinkedList<>();
+        int i = 0;
+        int IdIdx,descriptionIndex,startDateIdx,endDateIdx,segmentIdx,categoryIdx,photoIdx;
+        int iDval,categoryId,PhotoId;
+        String startDate,endDate,segment,descValue;
+        Cursor cursor = getAllRecords(database,TIME_RECORD_TABLE);
+        if (cursor != null && cursor.moveToFirst()) {
+            IdIdx = cursor.getColumnIndex(CATEGORY_ID);
+            descriptionIndex = cursor.getColumnIndex(DDESCRIPTION);
+            startDateIdx = cursor.getColumnIndex(START_TIME);
+            endDateIdx = cursor.getColumnIndex(END_TIME);
+            segmentIdx = cursor.getColumnIndex(TIME_SEGMENT);
+            categoryIdx = cursor.getColumnIndex(CATEGORY_ID_REF);
+            photoIdx =cursor.getColumnIndex(PHOTO_ID_REF);
+            do {
+                iDval = cursor.getInt(IdIdx);
+                descValue = cursor.getString(descriptionIndex);
+                startDate = cursor.getString(startDateIdx);
+                endDate = cursor.getString(endDateIdx);
+                segment = cursor.getString(segmentIdx);
+                categoryId = cursor.getInt(categoryIdx);
+                PhotoId = cursor.getInt(photoIdx);
+                Category c = getCategoryById(database,categoryId);
+                timeRecord = new TimeRecord(iDval,startDate,endDate,descValue,c,segment,photoRecord);
+                res.add(timeRecord);
+                i++;
+            }
+            while (cursor.moveToNext());
+        }
+        return res;
+    }
+
+    //TODO не тестировался
+    public Category getCategoryById(SQLiteDatabase database,int id){
+        sqlQuery = "select * from"+CATEGORY_TABLE+"where"+CATEGORY_ID+"=?";
+        Category category = null;
+        int i = 0;
+        String name;
+        int idCat;
+        Cursor cursor = database.query(CATEGORY_TABLE,null,CATEGORY_ID+"=?",new String[]{String.valueOf(id)},null,null,null);
+        if (cursor != null && cursor.moveToFirst()) {
+            int idIdx = cursor.getColumnIndex(DbUtils.CATEGORY_ID);
+            int categoryIdx = cursor.getColumnIndex(DbUtils.CATEGORY_NAME);
+            do {
+                idCat = cursor.getInt(idIdx);
+                name = cursor.getString(categoryIdx);
+                category = new Category(idCat,name);
+                i++;
+            }
+            while (cursor.moveToNext());
+        }
+        return category;
+    }
+
+    public Bitmap getPhotoById(SQLiteDatabase database,int id){
+        Cursor cursor = database.query(PHOTO_TABLE,null,PHOTO_ID+"=?",new String[]{String.valueOf(id)},null,null,null);
+        int IdIdx;
+        int i = 0;
+        int imageIdx;
+        Photo photo;
+        int idVal;
+        Bitmap bitmap = null;
+        if (cursor != null && cursor.moveToFirst()) {
+            IdIdx = cursor.getColumnIndex(PHOTO_ID);
+            imageIdx = cursor.getColumnIndex(IMAGE);
+                idVal = cursor.getInt(IdIdx);
+                bitmap =DbBitmapUtility.getImage(cursor.getBlob(imageIdx));
+                photo = new Photo(bitmap,id);
+        }
+        return bitmap;
+    }
+}
