@@ -1,5 +1,7 @@
 package com.lab3.domain;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by Александр on 13.11.2016.
  */
@@ -7,26 +9,22 @@ package com.lab3.domain;
 public class Photo {
 
     private  int Id;
-    private byte[] Image;
+    private Bitmap Image;
 
     public Photo(){
 
     }
 
-    public Photo(byte[] image, int id) {
+    public Photo(Bitmap image, int id) {
         Image = image;
         Id = id;
     }
 
-    public byte[] getImage() {
+    public Bitmap getImage() {
         return Image;
     }
 
-    public void setImage(byte[] image) {
-        Image = image;
-    }
-
-    public Photo(byte[] image) {
+    public void setImage(Bitmap image) {
         Image = image;
     }
 

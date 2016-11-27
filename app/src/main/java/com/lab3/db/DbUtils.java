@@ -5,10 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
-import android.widget.ListView;
 
+import com.lab3.DbBitmapUtility;
+import com.lab3.R;
 import com.lab3.domain.Category;
+import com.lab3.domain.Photo;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -150,4 +154,41 @@ public class DbUtils extends SQLiteOpenHelper {
         }
         return result;
     }
-}
+
+    public void initPhotoTable(SQLiteDatabase database,Context context){
+        Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.intellj);
+        byte[] image = DbBitmapUtility.getBytes(icon);
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(IMAGE,image);
+        insertData(database,contentValues,PHOTO_TABLE);
+    }
+
+    public List<Photo> getAllPhoto(SQLiteDatabase database){
+        List<Photo> res = new LinkedList<>();
+        Cursor cursor = getAllRecords(database,PHOTO_TABLE);
+        int IdIdx;
+        int i = 0;
+        int imageIdx;
+        Photo photo;
+        int id;
+        Bitmap bitmap;
+        if (cursor != null && cursor.moveToFirst()) {
+            IdIdx = cursor.getColumnIndex(PHOTO_ID);
+            imageIdx = cursor.getColumnIndex(IMAGE);
+            do {
+                id = cursor.getInt(IdIdx);
+                bitmap =DbBitmapUtility.getImage(cursor.getBlob(imageIdx));
+                photo = new Photo(bitmap,id);
+                res.add(photo);
+                i++;
+            }
+            while (cursor.moveToNext());
+        }
+        return  res;
+    }
+
+    public int deleteEntity(SQLiteDatabase database,String table,String causeColumn,String[] causeArgs){
+        int res =  database.delete (table, causeColumn+"=?", causeArgs);
+        return res;
+    }
+    }

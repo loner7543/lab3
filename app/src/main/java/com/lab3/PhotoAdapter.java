@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 
 import com.lab3.domain.Photo;
 
@@ -17,20 +18,29 @@ import java.util.List;
 public class PhotoAdapter extends BaseAdapter {
     private List<Photo> data;
     private LayoutInflater layoutInflater;
-    private Context context;
+    private Context ctx;
     private  int LayResId;
+    private LayoutInflater inflater;
 
     public PhotoAdapter(){
 
     }
+
+    public PhotoAdapter(Context context, int resource, List<Photo> objects) {
+        this.ctx =context;
+        this.LayResId = resource;
+        this.data = objects;
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
     @Override
     public int getCount() {
-        return 0;
+        return data.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return null;
+        return data.get(i);
     }
 
     @Override
@@ -39,7 +49,18 @@ public class PhotoAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        return null;
+    public View getView(int i, View convertView, ViewGroup viewGroup) {
+        View row = convertView;
+        if (row==null){
+            row = inflater.inflate(LayResId,viewGroup,false);
+            Photo currMeet = getPhoto(i);
+            ImageView meetName = (ImageView) row.findViewById(R.id.bmp);
+            meetName.setImageBitmap(currMeet.getImage());
+        }
+        return row;
+    }
+
+    public Photo getPhoto(int Position){
+        return (Photo) getItem(Position);
     }
 }
