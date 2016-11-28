@@ -1,6 +1,7 @@
 package com.lab3;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -38,7 +39,7 @@ public class TimeRecordActivity extends AppCompatActivity implements AdapterView
         recordListView = (ListView) findViewById(R.id.timeRecord_list);
         utils = new DbUtils(this, DbUtils.DATABASE_NAME, DbUtils.DATABASE_VERSION);
         database = utils.getWritableDatabase();//дает бд на запись
-        utils.initTimeTable(null,database);//забиваю бд данными
+       // utils.initTimeTable(null,database);//забиваю бд данными
         allRecords = utils.getAllTimes(database);
         adapter = new TimeRecordAdapter(context,R.layout.record_item,allRecords);
         recordListView.setOnItemClickListener(this);
@@ -46,7 +47,8 @@ public class TimeRecordActivity extends AppCompatActivity implements AdapterView
     }
 
     public void addRecord(View view){
-
+        Intent intent= new Intent(context,AddRecordActivity.class);
+        startActivity(intent);
     }
 
     public void EditRecord(View view){}
@@ -58,5 +60,11 @@ public class TimeRecordActivity extends AppCompatActivity implements AdapterView
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         String s = "defefefe";
+    }
+
+    //тут обработать результат добавления данных на другой активити
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

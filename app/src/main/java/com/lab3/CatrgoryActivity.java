@@ -39,32 +39,11 @@ public class CatrgoryActivity extends AppCompatActivity implements AdapterView.O
         utils = new DbUtils(this, DbUtils.DATABASE_NAME, DbUtils.DATABASE_VERSION);
         database = utils.getWritableDatabase();//дает бд на запись
         listView = (ListView) findViewById(R.id.category_list);
-        lst = new ArrayList<Category>();
-        parseCursor(utils.getAllRecords(database,DbUtils.CATEGORY_TABLE));
+        lst = utils.parseCursor(utils.getAllRecords(database,DbUtils.CATEGORY_TABLE));
         adapter = new ArrayAdapter<Category>(this,
                 android.R.layout.simple_list_item_1, lst);
         listView.setOnItemClickListener(this);
         listView.setAdapter(adapter);
-    }
-
-    public void parseCursor(Cursor cursor) {
-        String name;
-        int id;
-        Category category;
-        int i = 0;
-        if (cursor != null && cursor.moveToFirst()) {
-            int idIdx = cursor.getColumnIndex(DbUtils.CATEGORY_ID);
-            int categoryIdx = cursor.getColumnIndex(DbUtils.CATEGORY_NAME);
-            do {
-                id = cursor.getInt(idIdx);
-                name = cursor.getString(categoryIdx);
-                category = new Category(id,name);
-                lst.add(category);
-                i++;
-            }
-            while (cursor.moveToNext());
-        }
-        i = 0;
     }
 
     @Override

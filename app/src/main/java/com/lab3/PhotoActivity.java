@@ -22,6 +22,7 @@ public class PhotoActivity extends AppCompatActivity implements AdapterView.OnIt
     private ListView phtoListView;
     private Photo selectedPhoto;
     private PhotoAdapter adapter;
+    //context.getResources(), R.drawable.intellj
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +35,9 @@ public class PhotoActivity extends AppCompatActivity implements AdapterView.OnIt
         phtoListView = (ListView) findViewById(R.id.photoList);
         utils = new DbUtils(this, DbUtils.DATABASE_NAME, DbUtils.DATABASE_VERSION);
         database = utils.getWritableDatabase();//дает бд на запись
-        utils.initPhotoTable(database,context); //работает - фотка в бду же есть
+        //utils.initPhotoTable(database,R.drawable.intellj,context); //работает - фотка в бду же есть
+       // utils.initPhotoTable(database,R.drawable.git,context); //работает - фотка в бду же есть
+
         allPhoto = utils.getAllPhoto(database);
         phtoListView.setOnItemClickListener(this);
         adapter = new PhotoAdapter(context,R.layout.photo_item,allPhoto);

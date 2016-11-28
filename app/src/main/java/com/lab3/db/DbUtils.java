@@ -15,6 +15,7 @@ import com.lab3.domain.Category;
 import com.lab3.domain.Photo;
 import com.lab3.domain.TimeRecord;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -100,6 +101,11 @@ public class DbUtils extends SQLiteOpenHelper {
         contentValues.put(PHOTO_ID_REF,1);
         db.insert(TIME_PHOTO_TABLE,null,contentValues);
 
+        ContentValues cv = new ContentValues();
+        cv.put(TIME_ID_REF,1);
+        cv.put(PHOTO_ID_REF,2);
+        db.insert(TIME_PHOTO_TABLE,null,cv);
+
     }
 
     @Override
@@ -171,8 +177,8 @@ public class DbUtils extends SQLiteOpenHelper {
         return result;
     }
 
-    public void initPhotoTable(SQLiteDatabase database,Context context){
-        Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.intellj);
+    public void initPhotoTable(SQLiteDatabase database,int resID,Context ctx){
+        Bitmap icon = BitmapFactory.decodeResource(ctx.getResources(), resID);
         byte[] image = DbBitmapUtility.getBytes(icon);
         ContentValues contentValues = new ContentValues();
         contentValues.put(IMAGE,image);
@@ -314,5 +320,27 @@ public class DbUtils extends SQLiteOpenHelper {
             while (cursor.moveToNext());
         }
         return photo;
+    }
+
+    public ArrayList<Category> parseCursor(Cursor cursor) {
+        ArrayList<Category> lst = new ArrayList<>();
+        String name;
+        int id;
+        Category category;
+        int i = 0;
+        if (cursor != null && cursor.moveToFirst()) {
+            int idIdx = cursor.getColumnIndex(DbUtils.CATEGORY_ID);
+            int categoryIdx = cursor.getColumnIndex(DbUtils.CATEGORY_NAME);
+            do {
+                id = cursor.getInt(idIdx);
+                name = cursor.getString(categoryIdx);
+                category = new Category(id,name);
+                lst.add(category);
+                i++;
+            }
+            while (cursor.moveToNext());
+        }
+        i = 0;
+        return lst;
     }
 }

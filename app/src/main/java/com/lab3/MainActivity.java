@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         context = getApplicationContext();
         dbHelper = new DbUtils(this,DbUtils.DATABASE_NAME,DbUtils.DATABASE_VERSION);
         database = dbHelper.getWritableDatabase();//вызввает onCreate() и бд на запись
-        context.deleteDatabase(DbUtils.DATABASE_NAME);
+       // context.deleteDatabase(DbUtils.DATABASE_NAME);
         contentValues = new ContentValues();
     }
 
