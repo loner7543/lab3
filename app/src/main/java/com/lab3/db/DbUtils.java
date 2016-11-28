@@ -98,7 +98,7 @@ public class DbUtils extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(TIME_ID_REF,1);
         contentValues.put(PHOTO_ID_REF,1);
-        db.insert(CREATE_REFERENCE_TABLE,null,contentValues);
+        db.insert(TIME_PHOTO_TABLE,null,contentValues);
 
     }
 
@@ -243,6 +243,7 @@ public class DbUtils extends SQLiteOpenHelper {
                 segment = cursor.getString(segmentIdx);
                 categoryId = cursor.getInt(categoryIdx);
                 Category c = getCategoryById(database,categoryId);
+                photoRecord = getPhotoListByCatogory(database,c);
                 timeRecord = new TimeRecord(iDval,startDate,endDate,descValue,c,segment,photoRecord);
                 res.add(timeRecord);
                 i++;
@@ -252,9 +253,7 @@ public class DbUtils extends SQLiteOpenHelper {
         return res;
     }
 
-    //TODO не тестировался
     public Category getCategoryById(SQLiteDatabase database,int id){
-        sqlQuery = "select * from"+CATEGORY_TABLE+"where"+CATEGORY_ID+"=?";
         Category category = null;
         int i = 0;
         String name;
@@ -274,21 +273,46 @@ public class DbUtils extends SQLiteOpenHelper {
         return category;
     }
 
-    public Bitmap getPhotoById(SQLiteDatabase database,int id){
-        Cursor cursor = database.query(PHOTO_TABLE,null,PHOTO_ID+"=?",new String[]{String.valueOf(id)},null,null,null);
-        int IdIdx;
+    public List<Photo> getPhotoListByCatogory(SQLiteDatabase database, Category category) {
+        List<Photo> photosByCategory = new LinkedList<>();
+        Cursor cursor = database.query(TIME_PHOTO_TABLE, null, TIME_ID_REF + "=?", new String[]{String.valueOf(category.getId())}, null, null, null);
+        int idCategoryIdx;
+        int idPhotoIdx;
         int i = 0;
-        int imageIdx;
         Photo photo;
-        int idVal;
-        Bitmap bitmap = null;
+        int idValCategory,idValProtoID;
         if (cursor != null && cursor.moveToFirst()) {
-            IdIdx = cursor.getColumnIndex(PHOTO_ID);
-            imageIdx = cursor.getColumnIndex(IMAGE);
-                idVal = cursor.getInt(IdIdx);
-                bitmap =DbBitmapUtility.getImage(cursor.getBlob(imageIdx));
-                photo = new Photo(bitmap,id);
+            idCategoryIdx = cursor.getColumnIndex(DbUtils.TIME_ID_REF);
+            idPhotoIdx = cursor.getColumnIndex(DbUtils.PHOTO_ID_REF);
+            do {
+                idValCategory = cursor.getInt(idCategoryIdx);
+                idValProtoID = cursor.getInt(idPhotoIdx);
+                photo = getPhotoById(database,idValProtoID);
+                photosByCategory.add(photo);
+                i++;
+            }
+            while (cursor.moveToNext());
         }
-        return bitmap;
+        return photosByCategory;
+    }
+
+    public Photo getPhotoById(SQLiteDatabase database,int id){
+        Photo photo = null;
+        int i = 0;
+        Bitmap bmp;
+        int idCat;
+        Cursor cursor = database.query(PHOTO_TABLE,null,PHOTO_ID+"=?",new String[]{String.valueOf(id)},null,null,null);
+        if (cursor != null && cursor.moveToFirst()) {
+            int idIdx = cursor.getColumnIndex(DbUtils.PHOTO_ID);
+            int photoIdx = cursor.getColumnIndex(DbUtils.IMAGE);
+            do {
+                idCat = cursor.getInt(idIdx);
+                bmp = DbBitmapUtility.getImage(cursor.getBlob(photoIdx));
+                photo = new Photo(bmp,idCat);
+                i++;
+            }
+            while (cursor.moveToNext());
+        }
+        return photo;
     }
 }

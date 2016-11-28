@@ -73,7 +73,7 @@ public class TimeRecordAdapter extends BaseAdapter {
             TextView segment = (TextView) row.findViewById(R.id.segment_value);
             segment.setText(record.getOtr());
             ImageView imageView = (ImageView) row.findViewById(R.id.photo);
-           // imageView.setImageBitmap(record.getPhoto().get(0).getImage());
+            imageView.setImageBitmap(record.getPhoto().get(0).getImage());
         }
         return row;
     }
