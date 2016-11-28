@@ -343,4 +343,15 @@ public class DbUtils extends SQLiteOpenHelper {
         i = 0;
         return lst;
     }
+
+    //TODO решить как добавлять фотки
+    public void insertTimeRecord(SQLiteDatabase database,TimeRecord record){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CATEGORY_ID_REF,record.getCategory().getId());
+        contentValues.put(DDESCRIPTION,record.getDescription());
+        contentValues.put(START_TIME,record.getStartDate());
+        contentValues.put(END_TIME,record.getEndDate());
+        contentValues.put(TIME_SEGMENT,record.getOtr());
+        database.insert(TIME_RECORD_TABLE,null,contentValues);
+    }
 }
