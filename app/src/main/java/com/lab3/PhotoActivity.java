@@ -34,7 +34,7 @@ public class PhotoActivity extends AppCompatActivity implements AdapterView.OnIt
         phtoListView = (ListView) findViewById(R.id.photoList);
         utils = new DbUtils(this, DbUtils.DATABASE_NAME, DbUtils.DATABASE_VERSION);
         database = utils.getWritableDatabase();//дает бд на запись
-        //utils.initPhotoTable(database,context); //работает - фотка в бду же есть
+        utils.initPhotoTable(database,context); //работает - фотка в бду же есть
         allPhoto = utils.getAllPhoto(database);
         phtoListView.setOnItemClickListener(this);
         adapter = new PhotoAdapter(context,R.layout.photo_item,allPhoto);

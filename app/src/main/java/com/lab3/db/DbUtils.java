@@ -31,10 +31,15 @@ public class DbUtils extends SQLiteOpenHelper {
     public static final String CATEGORY_TABLE = "Category";
     public static final String PHOTO_TABLE = "Photo";
     public  static final String TIME_RECORD_TABLE = "TimeRecord";
+    public static final String TIME_PHOTO_TABLE= "time_photo";
 
     //Константы для полей таблицы "Категория"
     public static final String CATEGORY_ID = "ID";
     public static final String CATEGORY_NAME = "CATEGORY_NAME";
+
+    //таблица развязка между временем и категорией
+    public static final String TIME_ID_REF = "time_id_ref";
+    public static final String PHOTO_ID_REF="photo_id_ref";
 
     //таблица с фотками
     public static final String PHOTO_ID = "ID";
@@ -42,7 +47,6 @@ public class DbUtils extends SQLiteOpenHelper {
 
     //таблица с отметками времени
     public static final String TIME_ID = "ID";//первичный ключ глав таблицы время
-    public static final String PHOTO_ID_REF = "PHOTO_ID";//id  фотографии
     public static final String CATEGORY_ID_REF = "CATEGORY_ID";// id категории
     public static final String DDESCRIPTION = "DDESCRIPTION";
     public static final String START_TIME = "START_TIME";
@@ -60,12 +64,15 @@ public class DbUtils extends SQLiteOpenHelper {
             ");";
     public static final String CREATE_TIMERECORD_QUERY = "CREATE TABLE `TimeRecord` (\n" +
             "\t`ID`\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n" +
-            "\t`PHOTO_ID`\tINTEGER,\n" +
             "\t`CATEGORY_ID`\tINTEGER,\n" +
             "\t`DDESCRIPTION`\tTEXT,\n" +
             "\t`START_TIME`\tTEXT,\n" +
             "\t`END_TIME`\tTEXT,\n" +
             "\t`TIME_SEGMENT`\tINTEGER\n" +
+            ");";
+    public static final String CREATE_REFERENCE_TABLE="CREATE TABLE `time_photo` (\n" +
+            "\t`time_id_ref`\tINTEGER,\n" +
+            "\t`photo_id_ref`\tINTEGER\n" +
             ");";
 
     public String sqlQuery = "";//cтрока для запросов
@@ -80,11 +87,18 @@ public class DbUtils extends SQLiteOpenHelper {
         db.execSQL(CREATE_CATEGORY_QUERY);
         db.execSQL(CREATE_PHOTO_QUERY);
         db.execSQL(CREATE_TIMERECORD_QUERY);
+        db.execSQL(CREATE_REFERENCE_TABLE);
         Log.d(LOG_TAG,"Table created sucs");
         insertCatigories(db,new Category("Coн"));
         insertCatigories(db,new Category("Уборка"));
         insertCatigories(db,new Category("Работа"));
         insertCatigories(db,new Category("Гялял с котом"));
+
+        //инициализируем развязку
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(TIME_ID_REF,1);
+        contentValues.put(PHOTO_ID_REF,1);
+        db.insert(CREATE_REFERENCE_TABLE,null,contentValues);
 
     }
 
@@ -93,6 +107,7 @@ public class DbUtils extends SQLiteOpenHelper {
         db.execSQL("drop table if exists "+CATEGORY_TABLE);
         db.execSQL("drop table if exists "+PHOTO_TABLE);
         db.execSQL("drop table if exists "+TIME_RECORD_TABLE);
+        db.execSQL("drop table if exists "+TIME_PHOTO_TABLE);
         Log.d(LOG_TAG,"Drop tables sucs");
         onCreate(db);
 
@@ -195,7 +210,6 @@ public class DbUtils extends SQLiteOpenHelper {
 
     public void initTimeTable(TimeRecord timeRecord,SQLiteDatabase database){
         ContentValues contentValues = new ContentValues();
-        contentValues.put(PHOTO_ID_REF,1);
         contentValues.put(CATEGORY_ID_REF,1);
         contentValues.put(START_TIME,"11.12.12");
         contentValues.put(END_TIME,"11.12.13");
@@ -210,8 +224,8 @@ public class DbUtils extends SQLiteOpenHelper {
         TimeRecord timeRecord;
         List<Photo> photoRecord = new LinkedList<>();
         int i = 0;
-        int IdIdx,descriptionIndex,startDateIdx,endDateIdx,segmentIdx,categoryIdx,photoIdx;
-        int iDval,categoryId,PhotoId;
+        int IdIdx,descriptionIndex,startDateIdx,endDateIdx,segmentIdx,categoryIdx;
+        int iDval,categoryId;
         String startDate,endDate,segment,descValue;
         Cursor cursor = getAllRecords(database,TIME_RECORD_TABLE);
         if (cursor != null && cursor.moveToFirst()) {
@@ -221,7 +235,6 @@ public class DbUtils extends SQLiteOpenHelper {
             endDateIdx = cursor.getColumnIndex(END_TIME);
             segmentIdx = cursor.getColumnIndex(TIME_SEGMENT);
             categoryIdx = cursor.getColumnIndex(CATEGORY_ID_REF);
-            photoIdx =cursor.getColumnIndex(PHOTO_ID_REF);
             do {
                 iDval = cursor.getInt(IdIdx);
                 descValue = cursor.getString(descriptionIndex);
@@ -229,7 +242,6 @@ public class DbUtils extends SQLiteOpenHelper {
                 endDate = cursor.getString(endDateIdx);
                 segment = cursor.getString(segmentIdx);
                 categoryId = cursor.getInt(categoryIdx);
-                PhotoId = cursor.getInt(photoIdx);
                 Category c = getCategoryById(database,categoryId);
                 timeRecord = new TimeRecord(iDval,startDate,endDate,descValue,c,segment,photoRecord);
                 res.add(timeRecord);

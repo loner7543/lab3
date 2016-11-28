@@ -1,6 +1,7 @@
 package com.lab3;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -17,14 +18,17 @@ public class MainActivity extends AppCompatActivity {
     private DbUtils dbHelper;
     private SQLiteDatabase database;
     private ContentValues contentValues;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         StatButton = (Button) findViewById(R.id.StatisticsButton);
+        context = getApplicationContext();
         dbHelper = new DbUtils(this,DbUtils.DATABASE_NAME,DbUtils.DATABASE_VERSION);
         database = dbHelper.getWritableDatabase();//вызввает onCreate() и бд на запись
+        context.deleteDatabase(DbUtils.DATABASE_NAME);
         contentValues = new ContentValues();
     }
 
