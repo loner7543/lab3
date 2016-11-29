@@ -1,5 +1,6 @@
 package com.lab3;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,15 +14,21 @@ import android.widget.TimePicker;
 
 import com.lab3.db.DbUtils;
 import com.lab3.domain.Category;
+import com.lab3.domain.Photo;
 import com.lab3.domain.TimeRecord;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AddRecordActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private DbUtils utils;
     private SQLiteDatabase database;
-    private Spinner spinner;
+    private Spinner spinner;//для категорий
+    private Spinner photoSpinner;
+    private CustomPhotoAdapter customPhotoAdapter;
+    private Context context;
+    private List<Photo> allPhoto;
 
     private TimePicker startTime;
     private TimePicker endTime;
@@ -41,6 +48,7 @@ public class AddRecordActivity extends AppCompatActivity implements AdapterView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_record);
         utils = new DbUtils(this, DbUtils.DATABASE_NAME, DbUtils.DATABASE_VERSION);
+        context = getApplicationContext();
         database = utils.getWritableDatabase();//дает бд на запись
         allCategories = utils.parseCursor(utils.getAllRecords(database,DbUtils.CATEGORY_TABLE));
         spinner = (Spinner) findViewById(R.id.spinnerCategory);
@@ -49,6 +57,13 @@ public class AddRecordActivity extends AppCompatActivity implements AdapterView.
         spinner.setAdapter(adapter);
         spinner.setSelection(1);
         spinner.setOnItemSelectedListener(this);
+
+        allPhoto = utils.getAllPhoto(database);
+
+        photoSpinner = (Spinner) findViewById(R.id.photoSpinner);
+        customPhotoAdapter = new CustomPhotoAdapter(context,R.layout.photo_spinner_item,allPhoto);
+        photoSpinner.setAdapter(customPhotoAdapter);
+
 
         addDataBtn = (Button) findViewById(R.id.addRecord);
         startTime = (TimePicker) findViewById(R.id.startPicker);
@@ -60,6 +75,7 @@ public class AddRecordActivity extends AppCompatActivity implements AdapterView.
         segmentEdit = (EditText) findViewById(R.id.segment_EditText);
     }
 
+    //TODO сделать один обработчик на 2 дроп листа
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
        selectedCategory = (Category) adapterView.getItemAtPosition(i);
