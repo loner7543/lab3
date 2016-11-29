@@ -18,9 +18,10 @@ import com.lab3.domain.Photo;
 import com.lab3.domain.TimeRecord;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-public class AddRecordActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class AddRecordActivity extends AppCompatActivity {
 
     private DbUtils utils;
     private SQLiteDatabase database;
@@ -38,6 +39,8 @@ public class AddRecordActivity extends AppCompatActivity implements AdapterView.
     private ArrayList<Category> allCategories;
     private ArrayAdapter<Category> adapter;
     private Category selectedCategory;
+    private Photo selectedPhoto;
+    private List<Photo> selectedListPhotos;//фотки которые пользователь наберет из спинера
     private int startHour;
     private int startMinute;
     private int endHour;
@@ -56,13 +59,35 @@ public class AddRecordActivity extends AppCompatActivity implements AdapterView.
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setSelection(1);
-        spinner.setOnItemSelectedListener(this);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedCategory = (Category) adapterView.getItemAtPosition(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         allPhoto = utils.getAllPhoto(database);
 
         photoSpinner = (Spinner) findViewById(R.id.photoSpinner);
         customPhotoAdapter = new CustomPhotoAdapter(context,R.layout.photo_spinner_item,allPhoto);
         photoSpinner.setAdapter(customPhotoAdapter);
+        photoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedPhoto = (Photo) adapterView.getItemAtPosition(i);
+                selectedListPhotos.add(selectedPhoto);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
 
         addDataBtn = (Button) findViewById(R.id.addRecord);
@@ -73,20 +98,10 @@ public class AddRecordActivity extends AppCompatActivity implements AdapterView.
         endTime.setIs24HourView(true); // формат 24 часа
         descriptionEdit = (EditText) findViewById(R.id.addDescription_text);
         segmentEdit = (EditText) findViewById(R.id.segment_EditText);
+
+        selectedListPhotos = new LinkedList<>();
     }
 
-    //TODO сделать один обработчик на 2 дроп листа
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-       selectedCategory = (Category) adapterView.getItemAtPosition(i);
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
-
-    //TODO Проставить здесь и при добавлении в бд фотки
     public void onAddData(View view){
         startHour = startTime.getCurrentHour();
         startMinute = startTime.getCurrentMinute();
@@ -96,7 +111,7 @@ public class AddRecordActivity extends AppCompatActivity implements AdapterView.
         String endTimeStr = endHour+":"+endMinute;
         String  description = descriptionEdit.getText().toString();
         String segment = segmentEdit.getText().toString();
-        TimeRecord newDaata = new TimeRecord(startTimeStr,endTimeStr,description,selectedCategory,null,segment);
+        TimeRecord newDaata = new TimeRecord(startTimeStr,endTimeStr,description,selectedCategory,selectedListPhotos,segment);
         utils.insertTimeRecord(database,newDaata);
     }
 }

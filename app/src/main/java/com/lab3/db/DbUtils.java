@@ -344,14 +344,22 @@ public class DbUtils extends SQLiteOpenHelper {
         return lst;
     }
 
-    //TODO решить как добавлять фотки
     public void insertTimeRecord(SQLiteDatabase database,TimeRecord record){
         ContentValues contentValues = new ContentValues();
+        ContentValues cvR;
         contentValues.put(CATEGORY_ID_REF,record.getCategory().getId());
         contentValues.put(DDESCRIPTION,record.getDescription());
         contentValues.put(START_TIME,record.getStartDate());
         contentValues.put(END_TIME,record.getEndDate());
         contentValues.put(TIME_SEGMENT,record.getOtr());
+        //добавляем данные в табл развязку
+        List<Photo> photos = record.getPhoto();
+        for (Photo p:photos){
+            cvR = new ContentValues();
+            cvR.put(TIME_ID_REF,record.getCategory().getId());
+            cvR.put(PHOTO_ID_REF,p.getId());
+            database.insert(TIME_PHOTO_TABLE,null,cvR);
+        }
         database.insert(TIME_RECORD_TABLE,null,contentValues);
     }
 }

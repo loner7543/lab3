@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by Александр on 25.11.2016.
  */
-
+// TODO Проблемв  с отображением картинок
 public class TimeRecordAdapter extends BaseAdapter {
     private static final String LOG_TAG = "TimeRecordAdapter";
     private List<TimeRecord> data;
@@ -72,11 +72,13 @@ public class TimeRecordAdapter extends BaseAdapter {
 
             TextView segment = (TextView) row.findViewById(R.id.segment_value);
             segment.setText(record.getOtr());
-            ImageView imageView = (ImageView) row.findViewById(R.id.photo);
-            imageView.setImageBitmap(record.getPhoto().get(0).getImage());
+           /* if (record.getPhoto().size()!=0){
+                ImageView imageView = (ImageView) row.findViewById(R.id.photo);
+                imageView.setImageBitmap(record.getPhoto().get(0).getImage());
 
-            ImageView twoImage = (ImageView) row.findViewById(R.id.photo2);
-            twoImage.setImageBitmap(record.getPhoto().get(1).getImage());
+                ImageView twoImage = (ImageView) row.findViewById(R.id.photo2);
+                twoImage.setImageBitmap(record.getPhoto().get(1).getImage());
+            }*/
         }
         return row;
     }
