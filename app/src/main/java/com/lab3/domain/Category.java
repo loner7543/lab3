@@ -1,10 +1,12 @@
 package com.lab3.domain;
 
+import java.io.Serializable;
+
 /**
  * Created by Александр on 13.11.2016.
  */
 //таблица ктегории
-public class Category {
+public class Category implements Serializable {
     private int Id;
     private String CategoryName;
 

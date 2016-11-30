@@ -1,11 +1,14 @@
 package com.lab3;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -29,7 +32,7 @@ public class TimeRecordActivity extends AppCompatActivity implements AdapterView
     private DbUtils utils;
     private List<TimeRecord> allRecords;
     private TimeRecordAdapter adapter;
-
+    private TimeRecord selectedRecord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +45,7 @@ public class TimeRecordActivity extends AppCompatActivity implements AdapterView
         recordListView = (ListView) findViewById(R.id.timeRecord_list);
         utils = new DbUtils(this, DbUtils.DATABASE_NAME, DbUtils.DATABASE_VERSION);
         database = utils.getWritableDatabase();//дает бд на запись
-       utils.initTimeTable(null,database);//забиваю бд данными
+       //utils.initTimeTable(null,database);//забиваю бд данными
         allRecords = utils.getAllTimes(database);
         adapter = new TimeRecordAdapter(context,R.layout.record_item,allRecords);
         recordListView.setOnItemClickListener(this);
@@ -54,7 +57,9 @@ public class TimeRecordActivity extends AppCompatActivity implements AdapterView
         startActivityForResult(intent,REQUEST_CODE_REFRESH);
     }
 
-    public void EditRecord(View view){}
+    public void EditRecord(View view){
+        onCreateEditDialog();
+    }
 
     public void deleteRecord(View view){
 
@@ -62,7 +67,7 @@ public class TimeRecordActivity extends AppCompatActivity implements AdapterView
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        String s = "defefefe";
+        selectedRecord = (TimeRecord) adapterView.getItemAtPosition(i);
     }
 
     //тут обработать результат добавления данных на другой активити
@@ -70,7 +75,26 @@ public class TimeRecordActivity extends AppCompatActivity implements AdapterView
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(LOG_KEY, "requestCode = " + requestCode + ", resultCode = " + resultCode);
         if (resultCode==RESULT_OK){
-            adapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();//не срабатывает, данные не меняются
         }
+    }
+
+    public void onCreateEditDialog(){
+        String[] startTimes ;
+        String[] endTimes;
+        LayoutInflater layoutInflater = LayoutInflater.from(TimeRecordActivity.this);
+        View promptView = layoutInflater.inflate(R.layout.activity_add_record, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(TimeRecordActivity.this);
+        alertDialogBuilder.setView(promptView);
+        alertDialogBuilder.setCancelable(false)
+                .setNegativeButton(R.string.add_btn,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+
+                            }
+                        });
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
     }
 }

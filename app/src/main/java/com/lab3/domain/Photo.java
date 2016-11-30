@@ -1,12 +1,15 @@
 package com.lab3.domain;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+
+import java.io.Serializable;
 
 /**
  * Created by Александр on 13.11.2016.
  */
 
-public class Photo {
+public class Photo implements Serializable{
     public String PhotoName;
     private  int Id;
     private Bitmap Image;

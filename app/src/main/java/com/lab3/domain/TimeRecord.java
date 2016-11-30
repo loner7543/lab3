@@ -1,13 +1,13 @@
 package com.lab3.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by alma0516 on 11/25/2016.
  */
-
-public class TimeRecord {
+public class TimeRecord implements Serializable {
     private  int Id;
     private String StartDate;
     private String EndDate;
