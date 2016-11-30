@@ -3,9 +3,9 @@ package com.lab3;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -17,6 +17,9 @@ import com.lab3.domain.TimeRecord;
 import java.util.List;
 
 public class TimeRecordActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+    public static final int REQUEST_CODE_REFRESH = 1;
+    public static final String LOG_KEY = "TimeRecordActivity";
+
     private Button addBtn;
     private Button editBtn;
     private Button deleteBtn;
@@ -39,7 +42,7 @@ public class TimeRecordActivity extends AppCompatActivity implements AdapterView
         recordListView = (ListView) findViewById(R.id.timeRecord_list);
         utils = new DbUtils(this, DbUtils.DATABASE_NAME, DbUtils.DATABASE_VERSION);
         database = utils.getWritableDatabase();//дает бд на запись
-       // utils.initTimeTable(null,database);//забиваю бд данными
+       utils.initTimeTable(null,database);//забиваю бд данными
         allRecords = utils.getAllTimes(database);
         adapter = new TimeRecordAdapter(context,R.layout.record_item,allRecords);
         recordListView.setOnItemClickListener(this);
@@ -48,7 +51,7 @@ public class TimeRecordActivity extends AppCompatActivity implements AdapterView
 
     public void addRecord(View view){
         Intent intent= new Intent(context,AddRecordActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent,REQUEST_CODE_REFRESH);
     }
 
     public void EditRecord(View view){}
@@ -65,6 +68,9 @@ public class TimeRecordActivity extends AppCompatActivity implements AdapterView
     //тут обработать результат добавления данных на другой активити
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(LOG_KEY, "requestCode = " + requestCode + ", resultCode = " + resultCode);
+        if (resultCode==RESULT_OK){
+            adapter.notifyDataSetChanged();
+        }
     }
 }

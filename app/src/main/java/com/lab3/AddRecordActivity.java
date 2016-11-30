@@ -1,6 +1,7 @@
 package com.lab3;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -45,6 +46,8 @@ public class AddRecordActivity extends AppCompatActivity {
     private int startMinute;
     private int endHour;
     private int endMinute;
+
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,5 +116,8 @@ public class AddRecordActivity extends AppCompatActivity {
         String segment = segmentEdit.getText().toString();
         TimeRecord newDaata = new TimeRecord(startTimeStr,endTimeStr,description,selectedCategory,selectedListPhotos,segment);
         utils.insertTimeRecord(database,newDaata);
+        intent = new Intent();
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }
