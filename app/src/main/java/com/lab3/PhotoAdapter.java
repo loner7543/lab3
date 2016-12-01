@@ -15,6 +15,10 @@ import java.util.List;
  * Created by Александр on 25.11.2016.
  */
 
+/**
+ * адаптер для ListView
+ *
+ * */
 public class PhotoAdapter extends BaseAdapter {
     private List<Photo> data;
     private LayoutInflater layoutInflater;

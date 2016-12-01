@@ -17,6 +17,10 @@ import java.util.List;
  * Created by Александр on 29.11.2016.
  */
 
+/***
+ * адаптер для выпадающего списка
+ *
+ * */
 public class CustomPhotoAdapter extends ArrayAdapter<Photo> {
     private LayoutInflater inflater;
     private Photo tempValues;

@@ -362,4 +362,18 @@ public class DbUtils extends SQLiteOpenHelper {
         }
         database.insert(TIME_RECORD_TABLE,null,contentValues);
     }
+
+    // TODO удаление самой табл и удаление в развязке тех записей которые остались без категории
+    public int geleteTimeRecord(){
+        return 0;
+    }
+
+    public int geleteRasvFromTimerecord(SQLiteDatabase database,int recordId){
+        int res =  database.delete (TIME_RECORD_TABLE, TIME_ID+"=?", new String[] {String.valueOf(recordId)});
+        return res;
+    }
+
+    public int updateTimeRecord(TimeRecord timeRecord,SQLiteDatabase database){
+        return 0;
+    }
 }
