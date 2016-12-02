@@ -102,6 +102,7 @@ public class TimeRecordActivity extends AppCompatActivity implements AdapterView
         }
     }
 
+    // TODO Проставить сюда еще фотки
     public void onCreateEditDialog(){
         String[] startTimes ;
         String[] endTimes;
@@ -154,7 +155,9 @@ public class TimeRecordActivity extends AppCompatActivity implements AdapterView
                                 String newSegment = segmentEdit.getText().toString();
                                 String startDate = getDate(fromDate.getCurrentHour(),fromDate.getCurrentMinute());
                                 String endDate = getDate(toDate.getCurrentHour(),toDate.getCurrentMinute());
-
+                                int oldId = utils.getTimeRecordIdByDescription(selectedRecord.getDescription(),database);
+                                TimeRecord newRecord = new TimeRecord(oldId,startDate,endDate,newDescription,newCategory[0],newSegment,null);
+                                utils.updateTimeRecord(selectedRecord,newRecord,database);//Обновляет запись времени и если нужно то и категорию с фотками
                                     dialog.cancel();
 
                             }

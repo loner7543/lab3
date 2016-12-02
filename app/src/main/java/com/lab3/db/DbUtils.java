@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -76,6 +77,10 @@ public class DbUtils extends SQLiteOpenHelper {
             "\t`photo_id_ref`\tINTEGER\n" +
             ");";
 
+    public static final String CATEGORY_FK = "ALTER TABLE TimeRecord ADD CONSTRAINT category_fk\n" +
+            "                  FOREIGN KEY (CATEGORY_ID) \n" +
+            "                  REFERENCES Category(ID);";
+
     public String sqlQuery = "";//cтрока для запросов
 
     public DbUtils(Context context, String name,  int version) {
@@ -85,10 +90,12 @@ public class DbUtils extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {//вызывается при созщдании бд
         Log.d(LOG_TAG,"Databse create called");
+        db.execSQL("PRAGMA foreign_keys=ON");
         db.execSQL(CREATE_CATEGORY_QUERY);
         db.execSQL(CREATE_PHOTO_QUERY);
         db.execSQL(CREATE_TIMERECORD_QUERY);
         db.execSQL(CREATE_REFERENCE_TABLE);
+      //  db.execSQL(CATEGORY_FK);
         Log.d(LOG_TAG,"Table created sucs");
         insertCatigories(db,new Category("Coн"));
         insertCatigories(db,new Category("Уборка"));
@@ -217,14 +224,13 @@ public class DbUtils extends SQLiteOpenHelper {
     public void initTimeTable(TimeRecord timeRecord,SQLiteDatabase database){
         ContentValues contentValues = new ContentValues();
         contentValues.put(CATEGORY_ID_REF,1);
-        contentValues.put(START_TIME,"11.12.12");
-        contentValues.put(END_TIME,"11.12.13");
+        contentValues.put(START_TIME,"11:10");
+        contentValues.put(END_TIME,"11:20");
         contentValues.put(TIME_SEGMENT,10);
         contentValues.put(DDESCRIPTION,"asdf");
         insertData(database,contentValues,TIME_RECORD_TABLE);
     }
 
-    //TODO фотки пока пустые надо делать развязку
     public List<TimeRecord> getAllTimes(SQLiteDatabase database){
         List<TimeRecord> res = new LinkedList<>();
         TimeRecord timeRecord;
@@ -373,7 +379,32 @@ public class DbUtils extends SQLiteOpenHelper {
         return res;
     }
 
-    public int updateTimeRecord(TimeRecord timeRecord,SQLiteDatabase database){
+    public int updateTimeRecord(TimeRecord oldRecord,TimeRecord newRecord,SQLiteDatabase database){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DDESCRIPTION,newRecord.getDescription());
+        contentValues.put(START_TIME,newRecord.getStartDate());
+        contentValues.put(END_TIME,newRecord.getEndDate());
+        contentValues.put(TIME_SEGMENT,newRecord.getOtr());
         return 0;
     }
+
+    /**
+     * Нужна при обновлении чтобы взять старый ID
+     * */
+    public int getTimeRecordIdByDescription(String desc,SQLiteDatabase database){
+        int res = 0;
+        for (TimeRecord record:getAllTimes(database)){
+            if(record.getDescription().equals(desc)){
+                res = record.getId();
+            }
+        }
+        return res;
+    }
+
+    public void pieData(SQLiteDatabase database,TimeRecord timeRecord){
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        builder.setTables(CATEGORY_TABLE+"INNER JOIN "+TIME_RECORD_TABLE+"ON"+CATEGORY_ID+"="+CATEGORY_ID_REF);
+        //Cursor cursor = builder.query(database,null,);
+        //select sum(TIME_SEGMENT) from Category inner join TIME_RECORD_TABLE on Category.ID=TIME_RECORD_TABLE.CATEGORY_ID group by TIME_SEGMENT
+}
 }

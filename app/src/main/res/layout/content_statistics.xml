@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/parent_layout"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.lab3.StatisticsActivity"
@@ -23,13 +24,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"></ListView>
 
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_below="@+id/sum_time"
+            android:id="@+id/checkboxLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></LinearLayout>
+
         <ListView
             android:id="@+id/time_from_category"
             android:layout_marginTop="@dimen/list_margin"
-            android:layout_below="@+id/sum_time"
+            android:layout_below="@+id/checkboxLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
         </ListView>
+
+        <com.androidplot.pie.PieChart
+            android:layout_below="@+id/time_from_category"
+            style="@style/APDefacto.Dark"
+            android:id="@+id/asdf"
+            android:layout_width="300dp"
+            android:layout_height="150dp" />
 
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>
