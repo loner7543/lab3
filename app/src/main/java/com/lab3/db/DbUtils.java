@@ -1,4 +1,4 @@
-package com.lab3.db;
+﻿package com.lab3.db;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -70,16 +70,16 @@ public class DbUtils extends SQLiteOpenHelper {
             "\t`DDESCRIPTION`\tTEXT,\n" +
             "\t`START_TIME`\tTEXT,\n" +
             "\t`END_TIME`\tTEXT,\n" +
-            "\t`TIME_SEGMENT`\tINTEGER\n" +
+            "\t`TIME_SEGMENT`\tINTEGER,\n" +
+            " FOREIGN KEY(CATEGORY_ID) REFERENCES Category(id) ON UPDATE CASCADE\n"+
             ");";
     public static final String CREATE_REFERENCE_TABLE="CREATE TABLE `time_photo` (\n" +
             "\t`time_id_ref`\tINTEGER,\n" +
-            "\t`photo_id_ref`\tINTEGER\n" +
+            "\t`photo_id_ref`\tINTEGER, \n" +
+            " FOREIGN KEY(time_id_ref) REFERENCES Category(id) ON UPDATE CASCADE on delete cascade,\n"+
+            "FOREIGN KEY(photo_id_ref) REFERENCES Photo(id) ON UPDATE CASCADE"+
             ");";
 
-    public static final String CATEGORY_FK = "ALTER TABLE TimeRecord ADD CONSTRAINT category_fk\n" +
-            "                  FOREIGN KEY (CATEGORY_ID) \n" +
-            "                  REFERENCES Category(ID);";
 
     public String sqlQuery = "";//cтрока для запросов
 
@@ -95,7 +95,6 @@ public class DbUtils extends SQLiteOpenHelper {
         db.execSQL(CREATE_PHOTO_QUERY);
         db.execSQL(CREATE_TIMERECORD_QUERY);
         db.execSQL(CREATE_REFERENCE_TABLE);
-      //  db.execSQL(CATEGORY_FK);
         Log.d(LOG_TAG,"Table created sucs");
         insertCatigories(db,new Category("Coн"));
         insertCatigories(db,new Category("Уборка"));

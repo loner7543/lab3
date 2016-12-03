@@ -10,7 +10,11 @@ import android.view.View;
 import android.widget.Button;
 
 import com.lab3.db.DbUtils;
-
+//попросить стандартное приложение камера
+//посылать интент, в интенте адрес
+//неявный интент для камеры надо послать и откроется приложение камера
+//контент провайджер
+//потом искать и гркзить изображение по URI
 public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = "MainActivity";
     private Intent LaunchIntent;
@@ -28,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         context = getApplicationContext();
         dbHelper = new DbUtils(this,DbUtils.DATABASE_NAME,DbUtils.DATABASE_VERSION);
         database = dbHelper.getWritableDatabase();//вызввает onCreate() и бд на запись
-       // context.deleteDatabase(DbUtils.DATABASE_NAME);
+        context.deleteDatabase(DbUtils.DATABASE_NAME);
         contentValues = new ContentValues();
     }
 
