@@ -29,9 +29,19 @@
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/deletePhoto"
+        android:id="@+id/editPhoto"
         android:layout_below="@+id/photoList"
         android:layout_toRightOf="@+id/addPhoto"
+        android:onClick="onEditPhoto"
+        android:text="@string/editBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <Button
+        android:id="@+id/deletePhoto"
+        android:layout_below="@+id/photoList"
+        android:layout_toRightOf="@+id/editPhoto"
         android:onClick="onDeletePhoto"
         android:text="@string/delete_btn"
         android:layout_width="wrap_content"

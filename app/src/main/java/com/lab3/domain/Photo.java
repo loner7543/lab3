@@ -18,6 +18,10 @@ public class Photo implements Serializable{
 
     }
 
+    public Photo(Bitmap image) {
+        Image = image;
+    }
+
     public Photo(Bitmap image, int id) {
         Image = image;
         Id = id;

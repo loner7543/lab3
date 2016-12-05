@@ -1,4 +1,4 @@
-﻿package com.lab3.db;
+package com.lab3.db;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -186,6 +186,13 @@ public class DbUtils extends SQLiteOpenHelper {
     public void initPhotoTable(SQLiteDatabase database,int resID,Context ctx){
         Bitmap icon = BitmapFactory.decodeResource(ctx.getResources(), resID);
         byte[] image = DbBitmapUtility.getBytes(icon);
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(IMAGE,image);
+        insertData(database,contentValues,PHOTO_TABLE);
+    }
+
+    public void insertCameraImage(SQLiteDatabase database, Bitmap bitmap){
+        byte[] image = DbBitmapUtility.getBytes(bitmap);
         ContentValues contentValues = new ContentValues();
         contentValues.put(IMAGE,image);
         insertData(database,contentValues,PHOTO_TABLE);

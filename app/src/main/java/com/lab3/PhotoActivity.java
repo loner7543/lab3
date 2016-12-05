@@ -1,8 +1,11 @@
 package com.lab3;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -15,6 +18,8 @@ import com.lab3.domain.Photo;
 import java.util.List;
 
 public class PhotoActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+    private final int CAMERA_RESULT_ADD = 0;
+    private final int CAMERA_EDIT_PHOTO = 1;
     private Context context;
     private SQLiteDatabase database;
     private DbUtils utils;
@@ -45,7 +50,13 @@ public class PhotoActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public void onAddPhoto(View view){
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraIntent, CAMERA_RESULT_ADD);
+    }
 
+    public void onEditPhoto(View view){
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraIntent, CAMERA_EDIT_PHOTO);
     }
 
     public void onDeletePhoto(View view){
@@ -58,5 +69,23 @@ public class PhotoActivity extends AppCompatActivity implements AdapterView.OnIt
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         String s = "";
         selectedPhoto = adapter.getPhoto(i);
+    }
+
+    //TODO пока не установил ID - ксли надо будет менять фото через камеру - сделаю
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+       switch (requestCode){
+           case CAMERA_RESULT_ADD:{
+               Bitmap thumbnailBitmap = (Bitmap) data.getExtras().get("data");
+               utils.insertCameraImage(database,thumbnailBitmap);
+               allPhoto.add(new Photo(thumbnailBitmap));
+               adapter.notifyDataSetChanged();
+               break;
+           }
+           case CAMERA_EDIT_PHOTO:{
+               break;
+           }
+
+        }
     }
 }
