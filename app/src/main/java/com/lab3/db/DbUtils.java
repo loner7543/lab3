@@ -410,7 +410,14 @@ public class DbUtils extends SQLiteOpenHelper {
     public void pieData(SQLiteDatabase database,TimeRecord timeRecord){
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(CATEGORY_TABLE+"INNER JOIN "+TIME_RECORD_TABLE+"ON"+CATEGORY_ID+"="+CATEGORY_ID_REF);
+
+        //select sum(TIME_SEGMENT) from TimeRecord where CATEGORY_ID=?
         //Cursor cursor = builder.query(database,null,);
         //select sum(TIME_SEGMENT) from Category inner join TIME_RECORD_TABLE on Category.ID=TIME_RECORD_TABLE.CATEGORY_ID group by TIME_SEGMENT
 }
+
+    //самое большое суммарное время по категориям
+    //select max(TIME_SEGMENT) from
+
+    //
 }

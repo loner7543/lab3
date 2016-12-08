@@ -20,4 +20,7 @@
     <string name="photos">Фотографии</string>
     <string name="segment">Отрезок</string>
     <string name="description">Описание</string>
+    <string name="sum_time_per_category">Cуммарное время по выбранным категориям</string>
+    <string name="show3">Показать</string>
+    <string name="title1">Самые частые занятия</string>
 </resources>

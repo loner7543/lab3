@@ -12,35 +12,56 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/title1"
+            android:text="@string/title1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
         <ListView
             android:id="@+id/frequent_sessions"
+            android:layout_below="@+id/title1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"></ListView>
+
+        <TextView
+            android:id="@+id/title2"
+            android:text="Самое большое муммарное время по категориям"
+            android:layout_below="@+id/frequent_sessions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <ListView
             android:id="@+id/sum_time"
             android:layout_marginTop="@dimen/list_margin"
-            android:layout_below="@+id/frequent_sessions"
+            android:layout_below="@+id/title2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"></ListView>
 
-        <LinearLayout
-            android:orientation="vertical"
+        <TextView
             android:layout_below="@+id/sum_time"
-            android:id="@+id/checkboxLayout"
+            android:id="@+id/title3"
+            android:text="@string/sum_time_per_category"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"></LinearLayout>
-
+            android:layout_height="wrap_content" />
         <ListView
             android:id="@+id/time_from_category"
             android:layout_marginTop="@dimen/list_margin"
-            android:layout_below="@+id/checkboxLayout"
+            android:layout_below="@+id/title3"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="300dp">
         </ListView>
 
-        <com.androidplot.pie.PieChart
+        <Button
+            android:id="@+id/show_time_per_categoryBtn"
             android:layout_below="@+id/time_from_category"
+            android:layout_alignParentRight="true"
+            android:onClick="onShowListStat"
+            android:layout_width="wrap_content"
+            android:text="@string/show3"
+            android:layout_height="wrap_content" />
+
+        <com.androidplot.pie.PieChart
+            android:layout_below="@+id/show_time_per_categoryBtn"
             style="@style/APDefacto.Dark"
             android:id="@+id/asdf"
             android:layout_width="300dp"

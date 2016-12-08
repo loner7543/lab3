@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.SparseBooleanArray;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
@@ -25,16 +27,16 @@ public class StatisticsActivity extends AppCompatActivity {
     private ListView sum_time;
     private ListView time_from_category;
     private PieChart graficoPartidos;
-    private RelativeLayout parentLayout;
-    private LinearLayout checkboxLayout;
     private SQLiteDatabase database;
     private DbUtils utils;
     private ArrayList<Category> allCategories;
+    private  ArrayAdapter<Category> adapter;
+    private SparseBooleanArray checked;
+    private   ArrayList<Category> selectedItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //parentLayout = (RelativeLayout) findViewById(R.layout.content_statistics);
         setContentView(R.layout.activity_statistics);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -44,11 +46,11 @@ public class StatisticsActivity extends AppCompatActivity {
         utils = new DbUtils(this, DbUtils.DATABASE_NAME, DbUtils.DATABASE_VERSION);
         database = utils.getWritableDatabase();
         allCategories = utils.parseCursor(utils.getAllRecords(database,DbUtils.CATEGORY_TABLE));
-       /* for (Category category:allCategories){
-            CheckBox checkBox = new CheckBox(this);
-            checkBox.setText(category.getCategoryName());
-            checkboxLayout.addView(checkBox);
-        }*/
+        adapter = new ArrayAdapter<Category>(this,
+                android.R.layout.simple_list_item_multiple_choice, allCategories);
+        time_from_category.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        time_from_category.setAdapter(adapter);
+        selectedItems = new ArrayList<Category>();
 
         graficoPartidos = (PieChart) findViewById(R.id.asdf);
         graficoPartidos.getBackgroundPaint().setColor(Color.WHITE);
@@ -67,6 +69,16 @@ public class StatisticsActivity extends AppCompatActivity {
         graficoPartidos.addSeries(seg3, new SegmentFormatter(Color.rgb(200, 188, 0), Color.BLACK,Color.BLACK, Color.BLACK));
         PieRenderer pieRenderer = graficoPartidos.getRenderer(PieRenderer.class);
         pieRenderer.setDonutSize((float) 0 / 100,   PieRenderer.DonutMode.PERCENT);
+    }
+
+    public void onShowListStat(View view){
+        checked = time_from_category.getCheckedItemPositions();
+        for (int i = 0; i < checked.size(); i++) {
+            int position = checked.keyAt(i);
+            // Add sport if it is checked i.e.) == TRUE!
+            if (checked.valueAt(i))
+                selectedItems.add(adapter.getItem(position));
+        }
     }
 
 

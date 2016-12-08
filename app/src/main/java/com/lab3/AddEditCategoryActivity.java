@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.lab3.db.DbUtils;
 import com.lab3.domain.Category;
-
+//TODO Исправить UI
 public class AddEditCategoryActivity extends AppCompatActivity {
     private EditText categoryEditText;
     private DbUtils utils;
