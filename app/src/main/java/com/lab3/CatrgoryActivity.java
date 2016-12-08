@@ -2,6 +2,7 @@ package com.lab3;
 
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -14,15 +15,19 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.lab3.db.DbUtils;
 import com.lab3.domain.Category;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class CatrgoryActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     public static final  String LOG_TAG = "CategoryActivity";
+    public static final int ADD_RESULT_CODE =1;
+    public static final int EDIT_CODE = 2;
     private ListView listView;
     private ArrayAdapter<Category> adapter;
     private ArrayList<Category> lst;
@@ -52,13 +57,18 @@ public class CatrgoryActivity extends AppCompatActivity implements AdapterView.O
     }
 
     public void onAddCategory(View view){
-        title = getResources().getString(R.string.add_category_title);
-       onCreateDialolg("",1,title);
+        Intent intent = new Intent(this,AddEditCategoryActivity.class);
+        intent.putExtra("title","Добавить категорию");
+        intent.putExtra("Action",ADD_RESULT_CODE);
+        intent.putExtra("btn_text","Добавить запись");
+        startActivityForResult(intent,ADD_RESULT_CODE);
     }
 
     public void onEditCategory(View  view){
-        title = getResources().getString(R.string.edit_category_title);
-        onCreateDialolg(selectedCategory.getCategoryName(),2,title);
+        Intent intent = new Intent(this,AddEditCategoryActivity.class);
+        intent.putExtra("edited",selectedCategory);
+        intent.putExtra("Action",EDIT_CODE);
+        startActivityForResult(intent,EDIT_CODE);
     }
 
     public void onDeleteCategory(View view){
@@ -67,41 +77,24 @@ public class CatrgoryActivity extends AppCompatActivity implements AdapterView.O
         adapter.notifyDataSetChanged();
     }
 
-    //пишешь в бд, по имени тянешь ид и потом обновляешь ад
-    public void onCreateDialolg(String text, final int action,String title){
-        LayoutInflater layoutInflater = LayoutInflater.from(CatrgoryActivity.this);
-        View promptView = layoutInflater.inflate(R.layout.dialog_add_category, null);
-        final EditText editText = (EditText) promptView.findViewById(R.id.add_cat);
-        editText.setText(text);
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(CatrgoryActivity.this);
-        alertDialogBuilder.setTitle(title);
-        alertDialogBuilder.setView(promptView);
-        alertDialogBuilder.setCancelable(false)
-                .setNegativeButton(R.string.add_btn,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                if (action==1){
-                                    String category = editText.getText().toString();
-                                    adapter.add(new Category(category));
-                                    adapter.notifyDataSetChanged();
-                                    utils.insertCatigories(database,new Category(category));
-                                    dialog.cancel();
-                                }
-                                else {
-                                    String newCategory = editText.getText().toString();
-                                    adapter.remove(selectedCategory);
-                                    ContentValues contentValues = new ContentValues();
-                                    contentValues.put(DbUtils.CATEGORY_NAME,newCategory);
-                                    int pldId = utils.getIdByName(selectedCategory.getCategoryName(),database);
-                                    Category newObject = new Category(pldId,newCategory);
-                                    adapter.add(newObject);
-                                   int res =  utils.update(database,DbUtils.CATEGORY_TABLE,contentValues,DbUtils.CATEGORY_ID,new String[]{String.valueOf(pldId)});
-                                    dialog.cancel();
-                                }
-
-                            }
-                        });
-        AlertDialog alert = alertDialogBuilder.create();
-        alert.show();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode==RESULT_OK){
+            switch (requestCode){
+                case ADD_RESULT_CODE:{
+                    Category category = (Category) data.getSerializableExtra("cat");
+                    adapter.add(category);
+                    adapter.notifyDataSetChanged();
+                    break;
+                }
+                case EDIT_CODE:{
+                    adapter.remove(selectedCategory);
+                    Category newCategory = (Category) data.getSerializableExtra("cat");
+                    adapter.add(newCategory);
+                    adapter.notifyDataSetChanged();
+                    break;
+                }
+            }
+        }
     }
 }

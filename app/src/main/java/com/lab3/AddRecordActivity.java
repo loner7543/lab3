@@ -18,11 +18,13 @@ import com.lab3.domain.Category;
 import com.lab3.domain.Photo;
 import com.lab3.domain.TimeRecord;
 
+import org.apache.commons.lang.math.NumberUtils;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class AddRecordActivity extends AppCompatActivity {
+public class AddRecordActivity extends AppCompatActivity implements Comparable {
 
     private DbUtils utils;
     private SQLiteDatabase database;
@@ -114,10 +116,21 @@ public class AddRecordActivity extends AppCompatActivity {
         String endTimeStr = endHour+":"+endMinute;
         String  description = descriptionEdit.getText().toString();
         String segment = segmentEdit.getText().toString();
+        validate(segment);
         TimeRecord newDaata = new TimeRecord(startTimeStr,endTimeStr,description,selectedCategory,selectedListPhotos,segment);
         utils.insertTimeRecord(database,newDaata);
         intent = new Intent();
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    public boolean validate(String segmnt){
+        boolean f = NumberUtils.isDigits(segmnt);
+        return false;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return 0;
     }
 }

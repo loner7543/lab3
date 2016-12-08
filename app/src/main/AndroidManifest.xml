@@ -27,7 +27,8 @@
             android:label="@string/title_activity_photo"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".TimeRecordActivity" />
-        <activity android:name=".AddRecordActivity"></activity>
+        <activity android:name=".AddRecordActivity" />
+        <activity android:name=".AddEditCategoryActivity"></activity>
     </application>
 
 </manifest>
