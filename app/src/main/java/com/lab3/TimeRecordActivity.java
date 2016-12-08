@@ -75,7 +75,7 @@ public class TimeRecordActivity extends AppCompatActivity implements AdapterView
     }
 
     public void addRecord(View view){
-        Intent intent= new Intent(context,AddRecordActivity.class);
+        Intent intent= new Intent(context,RecordScrollingActivity.class);
         startActivityForResult(intent,REQUEST_CODE_REFRESH);
     }
 

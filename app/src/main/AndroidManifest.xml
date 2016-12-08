@@ -28,7 +28,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".TimeRecordActivity" />
         <activity android:name=".AddRecordActivity" />
-        <activity android:name=".AddEditCategoryActivity"></activity>
+        <activity android:name=".AddEditCategoryActivity" />
+        <activity
+            android:name=".RecordScrollingActivity"
+            android:label="@string/title_activity_record_scrolling"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
