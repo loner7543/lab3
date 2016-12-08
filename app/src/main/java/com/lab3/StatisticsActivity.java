@@ -8,10 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 
 import com.androidplot.pie.PieChart;
 import com.androidplot.pie.PieRenderer;
@@ -19,8 +16,10 @@ import com.androidplot.pie.Segment;
 import com.androidplot.pie.SegmentFormatter;
 import com.lab3.db.DbUtils;
 import com.lab3.domain.Category;
+import com.lab3.domain.PieData;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class StatisticsActivity extends AppCompatActivity {
     private ListView frequent_sessions;
@@ -54,19 +53,19 @@ public class StatisticsActivity extends AppCompatActivity {
 
         graficoPartidos = (PieChart) findViewById(R.id.asdf);
         graficoPartidos.getBackgroundPaint().setColor(Color.WHITE);
-        drawPie();
+       // drawPie();
     }
 
     private void drawPie() {
-        Segment seg0 = new Segment(" a", 20);
-        Segment seg1 = new Segment("s ", 10);
-        Segment seg2 = new Segment(" d", 10);
-        Segment seg3= new Segment("f",5);
-
-        graficoPartidos.addSeries(seg0, new SegmentFormatter(Color.rgb(106, 168, 79), Color.BLACK,Color.BLACK, Color.BLACK));
-        graficoPartidos.addSeries(seg1, new SegmentFormatter(Color.rgb(255, 0, 0), Color.BLACK,Color.BLACK, Color.BLACK));
-        graficoPartidos.addSeries(seg2, new SegmentFormatter(Color.rgb(255, 153, 0), Color.BLACK,Color.BLACK, Color.BLACK));
-        graficoPartidos.addSeries(seg3, new SegmentFormatter(Color.rgb(200, 188, 0), Color.BLACK,Color.BLACK, Color.BLACK));
+        Random random = new Random();
+        ArrayList<PieData> times = new ArrayList<>();
+        for (Category category:allCategories){
+            times.add(new PieData(category.getCategoryName(),utils.pieData(database,category)));
+        }
+        for (PieData pieData:times){
+            Segment segment = new Segment(pieData.getCategory(),pieData.getTime());
+            graficoPartidos.addSeries(segment, new SegmentFormatter(Color.rgb(random.nextInt(255), random.nextInt(255), random.nextInt(255)), Color.BLACK,Color.BLACK, Color.BLACK));
+        }
         PieRenderer pieRenderer = graficoPartidos.getRenderer(PieRenderer.class);
         pieRenderer.setDonutSize((float) 0 / 100,   PieRenderer.DonutMode.PERCENT);
     }

@@ -13,6 +13,46 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <TextView
+            android:id="@+id/startTW"
+            android:text="@string/select_start_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <DatePicker
+            android:id="@+id/fromDpStat"
+            android:layout_below="@+id/startTW"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </DatePicker>
+
+        <TimePicker
+            android:id="@+id/fromTPStat"
+            android:layout_below="@+id/fromDpStat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </TimePicker>
+
+        <TextView
+            android:id="@+id/endTW"
+            android:text="@string/select_end_date"
+            android:layout_below="@+id/fromTPStat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <!--еще одно безобразие-->
+        <DatePicker
+            android:id="@+id/ToDpStatDp"
+            android:layout_below="@+id/endTW"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></DatePicker>
+
+        <TimePicker
+            android:id="@+id/toTPStat"
+            android:layout_below="@+id/ToDpStatDp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></TimePicker>
+
+        <TextView
+            android:layout_below="@+id/toTPStat"
             android:id="@+id/title1"
             android:text="@string/title1"
             android:layout_width="wrap_content"

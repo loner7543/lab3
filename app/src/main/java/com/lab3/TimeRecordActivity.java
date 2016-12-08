@@ -59,7 +59,7 @@ public class TimeRecordActivity extends AppCompatActivity implements AdapterView
         recordListView = (ListView) findViewById(R.id.timeRecord_list);
         utils = new DbUtils(this, DbUtils.DATABASE_NAME, DbUtils.DATABASE_VERSION);
         database = utils.getWritableDatabase();//дает бд на запись
-       utils.initTimeTable(null,database);//забиваю бд данными
+       //utils.initTimeTable(null,database);//забиваю бд данными
         allRecords = utils.getAllTimes(database);
         adapter = new TimeRecordAdapter(context,R.layout.record_item,allRecords);
         recordListView.setOnItemClickListener(this);

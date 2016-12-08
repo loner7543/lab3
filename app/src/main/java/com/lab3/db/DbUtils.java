@@ -407,17 +407,21 @@ public class DbUtils extends SQLiteOpenHelper {
         return res;
     }
 
-    public void pieData(SQLiteDatabase database,TimeRecord timeRecord){
-        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-        builder.setTables(CATEGORY_TABLE+"INNER JOIN "+TIME_RECORD_TABLE+"ON"+CATEGORY_ID+"="+CATEGORY_ID_REF);
-
-        //select sum(TIME_SEGMENT) from TimeRecord where CATEGORY_ID=?
-        //Cursor cursor = builder.query(database,null,);
-        //select sum(TIME_SEGMENT) from Category inner join TIME_RECORD_TABLE on Category.ID=TIME_RECORD_TABLE.CATEGORY_ID group by TIME_SEGMENT
+    public int pieData(SQLiteDatabase database,Category category){
+        String sql = "select sum(TIME_SEGMENT) from TimeRecord where CATEGORY_ID=?";
+        String str = "";
+        Cursor cursor = database.rawQuery(sql,new String[]{String.valueOf(category.getId())},null);
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                for (String cn : cursor.getColumnNames()) {
+                    str = cursor.getString(cursor.getColumnIndex(cn));
+                }
+            }
+            while (cursor.moveToNext());
+        }
+        int res = Integer.valueOf(str);
+        return res;
 }
-
     //самое большое суммарное время по категориям
     //select max(TIME_SEGMENT) from
-
-    //
 }
