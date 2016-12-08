@@ -36,8 +36,15 @@
          android:layout_below="@+id/spinnerCategory"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content" />
-     <TimePicker
+
+     <DatePicker
+         android:id="@+id/fromDp"
          android:layout_below="@+id/startDate_textView"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content">
+     </DatePicker>
+     <TimePicker
+         android:layout_below="@+id/fromDp"
          android:id="@+id/startPicker"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"></TimePicker>
@@ -49,9 +56,15 @@
          android:layout_below="@+id/startPicker"
          android:layout_height="wrap_content" />
 
+     <DatePicker
+         android:id="@+id/toDp"
+         android:layout_below="@+id/endDate_textView"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"></DatePicker>
+
      <TimePicker
          android:id="@+id/endPicker"
-         android:layout_below="@+id/endDate_textView"
+         android:layout_below="@+id/toDp"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content">
      </TimePicker>
