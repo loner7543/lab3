@@ -407,6 +407,7 @@ public class DbUtils extends SQLiteOpenHelper {
         return res;
     }
 
+    //count и один и тот же селект
     public int pieData(SQLiteDatabase database,Category category){
         String sql = "select sum(TIME_SEGMENT) from TimeRecord where CATEGORY_ID=?";
         String str = "";

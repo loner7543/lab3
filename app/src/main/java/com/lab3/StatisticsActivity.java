@@ -8,7 +8,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.ListView;
+import android.widget.TimePicker;
 
 import com.androidplot.pie.PieChart;
 import com.androidplot.pie.PieRenderer;
@@ -19,6 +21,7 @@ import com.lab3.domain.Category;
 import com.lab3.domain.PieData;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Random;
 
 public class StatisticsActivity extends AppCompatActivity {
@@ -32,6 +35,24 @@ public class StatisticsActivity extends AppCompatActivity {
     private  ArrayAdapter<Category> adapter;
     private SparseBooleanArray checked;
     private   ArrayList<Category> selectedItems;
+    private DatePicker fromDatePicker;
+    private TimePicker fromTimePicker;
+    private DatePicker toDatePicker;
+    private TimePicker toTomePicker;
+
+    private Calendar calendar;
+
+    private int fromDay;
+    private int fromManth;
+    private int fromYear;
+    private int fronHour;
+    private int fromMinute;
+
+    private int toDay;
+    private int toMonth;
+    private int toYear;
+    private int toHour;
+    private int toMinute;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +63,13 @@ public class StatisticsActivity extends AppCompatActivity {
         frequent_sessions = (ListView) findViewById(R.id.frequent_sessions);
         sum_time = (ListView) findViewById(R.id.sum_time);
         time_from_category = (ListView) findViewById(R.id.time_from_category);
+
+        fromDatePicker = (DatePicker) findViewById(R.id.fromDpStat);
+        fromTimePicker = (TimePicker) findViewById(R.id.fromTPStat);
+
+        toDatePicker = (DatePicker) findViewById(R.id.ToDpStatDp);
+        toTomePicker = (TimePicker) findViewById(R.id.toTPStat);
+
         utils = new DbUtils(this, DbUtils.DATABASE_NAME, DbUtils.DATABASE_VERSION);
         database = utils.getWritableDatabase();
         allCategories = utils.parseCursor(utils.getAllRecords(database,DbUtils.CATEGORY_TABLE));
@@ -53,6 +81,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
         graficoPartidos = (PieChart) findViewById(R.id.asdf);
         graficoPartidos.getBackgroundPaint().setColor(Color.WHITE);
+        calendar = Calendar.getInstance();
        // drawPie();
     }
 
@@ -71,6 +100,20 @@ public class StatisticsActivity extends AppCompatActivity {
     }
 
     public void onShowListStat(View view){
+        fromDay = fromDatePicker.getDayOfMonth();
+        fromManth = fromDatePicker.getMonth();
+        fromYear = fromDatePicker.getYear();
+
+        fronHour = fromTimePicker.getCurrentHour();
+        fromMinute = fromTimePicker.getCurrentMinute();
+
+        toDay = toDatePicker.getMonth();
+        toMonth = toDatePicker.getDayOfMonth();
+        toYear = toDatePicker.getYear();
+
+        toHour = toTomePicker.getCurrentHour();
+        toMinute = toTomePicker.getCurrentMinute();
+
         checked = time_from_category.getCheckedItemPositions();
         for (int i = 0; i < checked.size(); i++) {
             int position = checked.keyAt(i);
