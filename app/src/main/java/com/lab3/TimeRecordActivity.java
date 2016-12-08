@@ -22,6 +22,7 @@ import android.widget.TimePicker;
 import com.lab3.db.DbUtils;
 import com.lab3.domain.Category;
 import com.lab3.domain.Photo;
+import com.lab3.domain.SerialPhoto;
 import com.lab3.domain.TimeRecord;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.List;
 
 public class TimeRecordActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     public static final int REQUEST_CODE_REFRESH = 1;
+    public static final int EDIT_TIME_RECORD_CODE=2;
     public static final String LOG_KEY = "TimeRecordActivity";
 
     private Button addBtn;
@@ -80,7 +82,18 @@ public class TimeRecordActivity extends AppCompatActivity implements AdapterView
     }
 
     public void EditRecord(View view){
-        onCreateEditDialog();
+        Intent editedIntent = new Intent(this,RecordScrollingActivity.class);
+        int i = 0;
+        List<Photo> photos = selectedRecord.getPhoto();
+        for (Photo photo:photos){
+            SerialPhoto serialPhoto = new SerialPhoto(photo.getId(),DbBitmapUtility.getBytes(photo.getImage()));
+            editedIntent.putExtra("photo"+i,serialPhoto);
+        }
+        i=0;
+        selectedRecord.setPhoto(null);
+        editedIntent.putExtra("data",selectedRecord);
+        editedIntent.putExtra("count",photos.size());
+        startActivityForResult(editedIntent,EDIT_TIME_RECORD_CODE);
     }
 
     public void deleteRecord(View view){
@@ -151,13 +164,13 @@ public class TimeRecordActivity extends AppCompatActivity implements AdapterView
                 .setNegativeButton(R.string.editBtn,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                String newDescription = descriptionEdit.getText().toString();
+                                /*String newDescription = descriptionEdit.getText().toString();
                                 String newSegment = segmentEdit.getText().toString();
                                 String startDate = getDate(fromDate.getCurrentHour(),fromDate.getCurrentMinute());
                                 String endDate = getDate(toDate.getCurrentHour(),toDate.getCurrentMinute());
                                 int oldId = utils.getTimeRecordIdByDescription(selectedRecord.getDescription(),database);
                                 TimeRecord newRecord = new TimeRecord(oldId,startDate,endDate,newDescription,newCategory[0],newSegment,null);
-                                utils.updateTimeRecord(selectedRecord,newRecord,database);//Обновляет запись времени и если нужно то и категорию с фотками
+                                utils.updateTimeRecord(selectedRecord,newRecord,database);//Обновляет запись времени и если нужно то и категорию с фотками*/
                                     dialog.cancel();
 
                             }

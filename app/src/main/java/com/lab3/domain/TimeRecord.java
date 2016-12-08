@@ -39,6 +39,15 @@ public class TimeRecord implements Serializable {
         this.photos = photos;
     }
 
+    public TimeRecord(int id, String otr, com.lab3.domain.Category category, String description, String endDate, String startDate) {
+        Id = id;
+        Otr = otr;
+        Category = category;
+        Description = description;
+        EndDate = endDate;
+        StartDate = startDate;
+    }
+
     public TimeRecord(){
 
     }
