@@ -82,6 +82,7 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         dataIntent = getIntent();
+        setTitle(dataIntent.getStringExtra("title"));
         editedData = (TimeRecord) dataIntent.getSerializableExtra("data");
         serialPhoto = (SerialPhoto) dataIntent.getSerializableExtra("photo0");
         timeRecord = (TimeRecord) dataIntent.getSerializableExtra("data");
@@ -130,6 +131,7 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
 
 
         addDataBtn = (Button) findViewById(R.id.addRecord);
+        addDataBtn.setText(dataIntent.getStringExtra("btn_text"));
         startTime = (TimePicker) findViewById(R.id.startPicker);
         startTime.setIs24HourView(true); // формат 24 часа
 
@@ -140,6 +142,12 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
 
         selectedListPhotos = new LinkedList<>();
 
+        //инициализируем даными при редактировании
+        if (dataIntent.getIntExtra("Action",5)==TimeRecordActivity.EDIT_TIME_RECORD_CODE)
+        {
+            descriptionEdit.setText(timeRecord.getDescription());
+            segmentEdit.setText(timeRecord.getOtr());
+        }
     }
 
     public void onAddData(View view){

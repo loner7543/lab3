@@ -80,11 +80,17 @@ public class TimeRecordActivity extends AppCompatActivity implements AdapterView
 
     public void addRecord(View view){
         Intent intent= new Intent(context,RecordScrollingActivity.class);
+        intent.putExtra("Action",REQUEST_CODE_REFRESH);
+        intent.putExtra("title","Добавить отметку времени");
+        intent.putExtra("btn_text","Добавить запись");
         startActivityForResult(intent,REQUEST_CODE_REFRESH);
     }
 
     public void EditRecord(View view){
         Intent editedIntent = new Intent(this,RecordScrollingActivity.class);
+        editedIntent.putExtra("title","Изменить отметку времени");
+        editedIntent.putExtra("btn_text","Изменить запись");
+        editedIntent.putExtra("Action",EDIT_TIME_RECORD_CODE);
         int i = 0;
         List<Photo> photos = selectedRecord.getPhoto();
         for (Photo photo:photos){
@@ -141,8 +147,7 @@ public class TimeRecordActivity extends AppCompatActivity implements AdapterView
 
         }
     }
-
-    // TODO Проставить сюда еще фотки
+    
     public void onCreateEditDialog(){
         String[] startTimes ;
         String[] endTimes;
