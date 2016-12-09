@@ -380,6 +380,7 @@ public class DbUtils extends SQLiteOpenHelper {
         return 0;
     }
 
+    // TODO Дописать его чтоб чистил ращщвязку
     public int geleteRasvFromTimerecord(SQLiteDatabase database,int recordId){
         int res =  database.delete (TIME_RECORD_TABLE, TIME_ID+"=?", new String[] {String.valueOf(recordId)});
         return res;
@@ -425,4 +426,21 @@ public class DbUtils extends SQLiteOpenHelper {
 }
     //самое большое суммарное время по категориям
     //select max(TIME_SEGMENT) from
+
+    /**Каскадное удаление категории*/
+    public void deleteCascadeCategory(SQLiteDatabase database,Category category){
+        int res =  database.delete (CATEGORY_TABLE, CATEGORY_NAME+"=?", new String[] {category.getCategoryName()});
+        sqlQuery = "select "+TIME_ID+" from "+TIME_RECORD_TABLE+" where "+CATEGORY_ID_REF+ " = ?";
+        Cursor cursor = database.rawQuery(sqlQuery,new String[]{String.valueOf(category.getId())},null);
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(TIME_ID);
+        int idValue;//значение id
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                idValue = cursor.getInt(idx);
+               int i =  geleteRasvFromTimerecord(database,idValue);
+            }
+            while (cursor.moveToNext());
+        }
+    }
 }

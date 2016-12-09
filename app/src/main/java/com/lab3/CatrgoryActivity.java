@@ -74,7 +74,7 @@ public class CatrgoryActivity extends AppCompatActivity implements AdapterView.O
     }
 
     public void onDeleteCategory(View view){
-        int res =  database.delete (utils.CATEGORY_TABLE, utils.CATEGORY_NAME+"=?", new String[] {selectedCategory.getCategoryName()});
+        utils.deleteCascadeCategory(database,selectedCategory);
         adapter.remove(selectedCategory);
         adapter.notifyDataSetChanged();
     }
