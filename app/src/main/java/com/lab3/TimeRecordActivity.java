@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.lab3.db.DbUtils;
 import com.lab3.domain.Category;
@@ -26,6 +27,7 @@ import com.lab3.domain.SerialPhoto;
 import com.lab3.domain.TimeRecord;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class TimeRecordActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
@@ -98,6 +100,7 @@ public class TimeRecordActivity extends AppCompatActivity implements AdapterView
 
     public void deleteRecord(View view){
         utils.geleteRasvFromTimerecord(database,selectedRecord.getId());
+        allRecords.remove(selectedRecord);
         adapter.notifyDataSetChanged();
     }
 
@@ -111,7 +114,31 @@ public class TimeRecordActivity extends AppCompatActivity implements AdapterView
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(LOG_KEY, "requestCode = " + requestCode + ", resultCode = " + resultCode);
         if (resultCode==RESULT_OK){
-            adapter.notifyDataSetChanged();//не срабатывает, данные не меняются
+            switch (requestCode){
+                case REQUEST_CODE_REFRESH:{//запись добавили в бд
+                    int i = 0;
+                    int photoCount = data.getIntExtra("count",0);
+                    TimeRecord newRecord = (TimeRecord) data.getSerializableExtra("data");
+                    List<Photo> newPhotos = new LinkedList<>();
+                    for (int j = 0;j<photoCount;j++)
+                    {
+                        SerialPhoto f = (SerialPhoto) data.getSerializableExtra("photo"+i);
+                        newPhotos.add(new Photo(DbBitmapUtility.getImage(f.getData()),f.getId()));
+                        i++;
+                    }
+                    newRecord.setPhoto(newPhotos);
+                    allRecords.add(newRecord);
+                    adapter.notifyDataSetChanged();
+                    break;
+                }
+                case EDIT_TIME_RECORD_CODE:{
+                    break;
+                }
+                default:{
+                    Toast.makeText(this,"Ошибка при вставке или изменении отметки времени",Toast.LENGTH_LONG);
+                }
+            }
+
         }
     }
 

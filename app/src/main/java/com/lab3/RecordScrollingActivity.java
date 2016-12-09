@@ -85,7 +85,7 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
         editedData = (TimeRecord) dataIntent.getSerializableExtra("data");
         serialPhoto = (SerialPhoto) dataIntent.getSerializableExtra("photo0");
         timeRecord = (TimeRecord) dataIntent.getSerializableExtra("data");
-        bitmap = DbBitmapUtility.getImage(serialPhoto.getData());
+        //bitmap = DbBitmapUtility.getImage(serialPhoto.getData());//пока не пофиксил
         utils = new DbUtils(this, DbUtils.DATABASE_NAME, DbUtils.DATABASE_VERSION);
         context = getApplicationContext();
         database = utils.getWritableDatabase();//дает бд на запись
@@ -142,7 +142,6 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
 
     }
 
-    //TODO вотправить все назад
     public void onAddData(View view){
         fromYear = fromDatePicker.getYear();
         fromMonth = fromDatePicker.getMonth();
@@ -163,6 +162,14 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
         TimeRecord newDaata = new TimeRecord(startTimeStr,endTimeStr,description,selectedCategory,selectedListPhotos,segment);
         utils.insertTimeRecord(database,newDaata);
         intent = new Intent();
+        newDaata.setPhoto(null);
+        intent.putExtra("data",newDaata);
+        int i = 0;
+        for (Photo photo:selectedListPhotos){
+           SerialPhoto serialPhoto = new SerialPhoto(photo.getId(),DbBitmapUtility.getBytes(photo.getImage()));
+            intent.putExtra("photo"+i,serialPhoto);
+        }
+        intent.putExtra("count",selectedListPhotos.size());
         setResult(RESULT_OK, intent);
         finish();
     }
