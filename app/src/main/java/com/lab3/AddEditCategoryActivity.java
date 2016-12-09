@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.lab3.db.DbUtils;
 import com.lab3.domain.Category;
-//TODO Исправить UI
 public class AddEditCategoryActivity extends AppCompatActivity {
     private EditText categoryEditText;
     private DbUtils utils;
@@ -28,17 +27,19 @@ public class AddEditCategoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_category);
-       textIntent = getIntent();
+        textIntent = getIntent();
         action = textIntent.getIntExtra("Action",10);
-        selectedCategory = (Category) textIntent.getSerializableExtra("edited");
-      //  setTitle(intent.getStringExtra("title"));
+        setTitle(textIntent.getStringExtra("title"));
         utils = new DbUtils(this, DbUtils.DATABASE_NAME, DbUtils.DATABASE_VERSION);
         database = utils.getWritableDatabase();//дает бд на запись
 
         categoryEditText = (EditText) findViewById(R.id.addNewCategory);
-        //categoryEditText.setText(selectedCategory.getCategoryName());
         addCategoryBtn = (Button) findViewById(R.id.addCategoryBtn);
-   //     addCategoryBtn.setText(intent.getStringExtra("btn_text"));
+        addCategoryBtn.setText(textIntent.getStringExtra("btn_text"));
+        if (action==CatrgoryActivity.EDIT_CODE){
+            selectedCategory = (Category) textIntent.getSerializableExtra("edited");
+            categoryEditText.setText(selectedCategory.getCategoryName());
+        }
     }
 
     public void onAddCategory(View view){

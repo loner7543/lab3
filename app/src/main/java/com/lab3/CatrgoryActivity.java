@@ -68,6 +68,8 @@ public class CatrgoryActivity extends AppCompatActivity implements AdapterView.O
         Intent intent = new Intent(this,AddEditCategoryActivity.class);
         intent.putExtra("edited",selectedCategory);
         intent.putExtra("Action",EDIT_CODE);
+        intent.putExtra("title","Изменить категорию");
+        intent.putExtra("btn_text","Изменить запись");
         startActivityForResult(intent,EDIT_CODE);
     }
 
