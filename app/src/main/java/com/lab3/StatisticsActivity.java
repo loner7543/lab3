@@ -88,6 +88,8 @@ public class StatisticsActivity extends AppCompatActivity {
         graficoPartidos.getBackgroundPaint().setColor(Color.WHITE);
         calendar = Calendar.getInstance();
         drawPie();
+        List<TimeCategory> ds = utils.sumTimeOrder(database,allCategories);
+        String s = "efdef";
     }
 
     private void drawPie() {

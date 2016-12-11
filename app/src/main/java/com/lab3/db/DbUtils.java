@@ -16,6 +16,9 @@ import com.lab3.domain.TimeCategory;
 import com.lab3.domain.TimeRecord;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -444,8 +447,36 @@ public class DbUtils extends SQLiteOpenHelper {
         TimeCategory timePerCategory = new TimeCategory(category,res);
         return timePerCategory;
     }
-    //самое большое суммарное время по категориям
-    //select max(TIME_SEGMENT) from
+    public List<TimeCategory> sumTimeOrder(SQLiteDatabase database,List<Category> allCategories){
+        List<TimeCategory> res = new LinkedList<>();
+        sqlQuery = "select sum(TIME_SEGMENT) from TimeRecord where CATEGORY_ID=?";
+        String str = "";
+        for (Category c:allCategories){
+            Cursor cursor = database.rawQuery(sqlQuery, new String[]{String.valueOf(c.getId())}, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    for (String cn : cursor.getColumnNames()) {
+                        str = cursor.getString(cursor.getColumnIndex(cn));
+                    }
+                }
+                while (cursor.moveToNext());
+            }
+            int sd = Integer.valueOf(str);
+            TimeCategory timePerCategory = new TimeCategory(c,sd);
+            res.add(timePerCategory);
+        }
+        String s = "";
+        Collections.sort(res, new Comparator<TimeCategory>() {
+            @Override
+            public int compare(TimeCategory timeCategory, TimeCategory t1) {
+                if(timeCategory.getSegmentValue()>t1.getSegmentValue()){
+                    return -1;
+                }
+                else return 1;
+            }
+        });
+        return res;
+    }
 
     /**Каскадное удаление категории*/
     public void deleteCascadeCategory(SQLiteDatabase database,Category category){

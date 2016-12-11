@@ -70,10 +70,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"></ListView>
 
+        <Button
+            android:text="@string/show3"
+            android:id="@+id/frequent_sessions_btn"
+            android:layout_below="@+id/frequent_sessions"
+            android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_height="wrap_content" />
+
         <TextView
             android:id="@+id/title2"
-            android:text="Самое большое муммарное время по категориям"
-            android:layout_below="@+id/frequent_sessions"
+            android:text="Самое большое суммарное время по категориям"
+            android:layout_below="@+id/frequent_sessions_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -84,8 +92,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"></ListView>
 
-        <TextView
+        <Button
+            android:id="@+id/sum_time_show_btn"
+            android:layout_width="wrap_content"
             android:layout_below="@+id/sum_time"
+            android:text="@string/show3"
+            android:layout_alignParentRight="true"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_below="@+id/sum_time_show_btn"
             android:id="@+id/title3"
             android:text="@string/sum_time_per_category"
             android:layout_width="wrap_content"
@@ -111,8 +127,8 @@
             android:layout_below="@+id/show_time_per_categoryBtn"
             style="@style/APDefacto.Dark"
             android:id="@+id/asdf"
-            android:layout_width="300dp"
-            android:layout_height="150dp" />
+            android:layout_width="600dp"
+            android:layout_height="600dp" />
 
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>
