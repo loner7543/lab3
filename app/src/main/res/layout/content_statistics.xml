@@ -12,7 +12,14 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
+
+        <Spinner
+            android:id="@+id/months"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </Spinner>
         <TextView
+            android:layout_below="@+id/months"
             android:id="@+id/startTW"
             android:text="@string/select_start_date"
             android:layout_width="wrap_content"

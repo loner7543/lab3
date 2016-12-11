@@ -5,15 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.lab3.DbBitmapUtility;
-import com.lab3.R;
 import com.lab3.domain.Category;
 import com.lab3.domain.Photo;
+import com.lab3.domain.TimeCategory;
 import com.lab3.domain.TimeRecord;
 
 import java.util.ArrayList;
@@ -227,6 +226,11 @@ public class DbUtils extends SQLiteOpenHelper {
         return res;
     }
 
+    //
+    public void deleteRazvByPhoto(Photo photo){
+        sqlQuery = "";
+    }
+
     public void initTimeTable(TimeRecord timeRecord,SQLiteDatabase database){
         ContentValues contentValues = new ContentValues();
         contentValues.put(CATEGORY_ID_REF,1);
@@ -375,13 +379,7 @@ public class DbUtils extends SQLiteOpenHelper {
         database.insert(TIME_RECORD_TABLE,null,contentValues);
     }
 
-    // TODO удаление самой табл и удаление в развязке тех записей которые остались без категории
-    public int geleteTimeRecord(){
-        return 0;
-    }
-
-    // TODO Дописать его чтоб чистил ращщвязку
-    public int geleteRasvFromTimerecord(SQLiteDatabase database,int recordId){
+    public int deleteTimeRecord(SQLiteDatabase database, int recordId){
         int res =  database.delete (TIME_RECORD_TABLE, TIME_ID+"=?", new String[] {String.valueOf(recordId)});
         return res;
     }
@@ -410,6 +408,7 @@ public class DbUtils extends SQLiteOpenHelper {
 
     //count и один и тот же селект
     public int pieData(SQLiteDatabase database,Category category){
+        int res;
         String sql = "select sum(TIME_SEGMENT) from TimeRecord where CATEGORY_ID=?";
         String str = "";
         Cursor cursor = database.rawQuery(sql,new String[]{String.valueOf(category.getId())},null);
@@ -421,9 +420,30 @@ public class DbUtils extends SQLiteOpenHelper {
             }
             while (cursor.moveToNext());
         }
-        int res = Integer.valueOf(str);
+        if (str==null){
+            res = 0;
+        }
+        else {
+            res = Integer.valueOf(str);
+        }
         return res;
 }
+    public TimeCategory sumTimePerCategory(SQLiteDatabase database,Category category) {
+        sqlQuery = "select sum(TIME_SEGMENT) from TimeRecord where CATEGORY_ID=?";
+        String str = "";
+        Cursor cursor = database.rawQuery(sqlQuery, new String[]{String.valueOf(category.getId())}, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                for (String cn : cursor.getColumnNames()) {
+                    str = cursor.getString(cursor.getColumnIndex(cn));
+                }
+            }
+            while (cursor.moveToNext());
+        }
+        int res = Integer.valueOf(str);
+        TimeCategory timePerCategory = new TimeCategory(category,res);
+        return timePerCategory;
+    }
     //самое большое суммарное время по категориям
     //select max(TIME_SEGMENT) from
 
@@ -438,7 +458,7 @@ public class DbUtils extends SQLiteOpenHelper {
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 idValue = cursor.getInt(idx);
-               int i =  geleteRasvFromTimerecord(database,idValue);
+               int i =  deleteTimeRecord(database,idValue);
             }
             while (cursor.moveToNext());
         }

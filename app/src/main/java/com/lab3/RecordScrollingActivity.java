@@ -52,6 +52,7 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
     private List<Photo> selectedListPhotos;//фотки которые пользователь наберет из спинера
     private DatePicker fromDatePicker;
     private DatePicker toDatePicker;
+    private Spinner MonthSpinner;
 
     private int fromYear;
     private int toYear;
@@ -148,6 +149,7 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
             descriptionEdit.setText(timeRecord.getDescription());
             segmentEdit.setText(timeRecord.getOtr());
         }
+        MonthSpinner = (Spinner) findViewById(R.id.months);
     }
 
     public void onAddData(View view){

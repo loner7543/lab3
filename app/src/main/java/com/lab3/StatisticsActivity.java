@@ -1,5 +1,6 @@
 package com.lab3;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -19,9 +20,12 @@ import com.androidplot.pie.SegmentFormatter;
 import com.lab3.db.DbUtils;
 import com.lab3.domain.Category;
 import com.lab3.domain.PieData;
+import com.lab3.domain.TimeCategory;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 public class StatisticsActivity extends AppCompatActivity {
@@ -82,7 +86,7 @@ public class StatisticsActivity extends AppCompatActivity {
         graficoPartidos = (PieChart) findViewById(R.id.asdf);
         graficoPartidos.getBackgroundPaint().setColor(Color.WHITE);
         calendar = Calendar.getInstance();
-       // drawPie();
+        drawPie();
     }
 
     private void drawPie() {
@@ -92,8 +96,10 @@ public class StatisticsActivity extends AppCompatActivity {
             times.add(new PieData(category.getCategoryName(),utils.pieData(database,category)));
         }
         for (PieData pieData:times){
-            Segment segment = new Segment(pieData.getCategory(),pieData.getTime());
-            graficoPartidos.addSeries(segment, new SegmentFormatter(Color.rgb(random.nextInt(255), random.nextInt(255), random.nextInt(255)), Color.BLACK,Color.BLACK, Color.BLACK));
+            if (pieData.getTime()!=0){//убираю сегменты с нулевыми отрезками, дабы не загромождать подпись
+                Segment segment = new Segment(pieData.getCategory(),pieData.getTime());
+                graficoPartidos.addSeries(segment, new SegmentFormatter(Color.rgb(random.nextInt(255), random.nextInt(255), random.nextInt(255)), Color.BLACK,Color.BLACK, Color.BLACK));
+            }
         }
         PieRenderer pieRenderer = graficoPartidos.getRenderer(PieRenderer.class);
         pieRenderer.setDonutSize((float) 0 / 100,   PieRenderer.DonutMode.PERCENT);
@@ -121,6 +127,15 @@ public class StatisticsActivity extends AppCompatActivity {
             if (checked.valueAt(i))
                 selectedItems.add(adapter.getItem(position));
         }
+        Intent intent = new Intent(this,TimePerCategory.class);
+        int i = 0;
+        for (Category c:selectedItems){
+            TimeCategory timeCategory = utils.sumTimePerCategory(database,c);
+            intent.putExtra("data"+i,timeCategory);
+            i++;
+        }
+        intent.putExtra("count",i);
+        startActivity(intent);
     }
 
 
