@@ -6,10 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import java.text.SimpleDateFormat;
+
+import com.lab3.domain.Photo;
 import com.lab3.domain.TimeRecord;
 
 import java.text.DateFormat;
@@ -18,7 +20,6 @@ import java.util.List;
 /**
  * Created by Александр on 25.11.2016.
  */
-// TODO Проблемв  с отображением картинок
 public class TimeRecordAdapter extends BaseAdapter {
     private static final String LOG_TAG = "TimeRecordAdapter";
     private List<TimeRecord> data;
@@ -72,13 +73,14 @@ public class TimeRecordAdapter extends BaseAdapter {
 
             TextView segment = (TextView) row.findViewById(R.id.segment_value);
             segment.setText(record.getOtr());
-           /* if (record.getPhoto().size()!=0){
-                ImageView imageView = (ImageView) row.findViewById(R.id.photo);
-                imageView.setImageBitmap(record.getPhoto().get(0).getImage());
 
-                ImageView twoImage = (ImageView) row.findViewById(R.id.photo2);
-                twoImage.setImageBitmap(record.getPhoto().get(1).getImage());
-            }*/
+            LinearLayout linearLayout = (LinearLayout) row.findViewById(R.id.photos_layout);
+            for (Photo photo:record.getPhoto()){
+                ImageView imageView = new ImageView(ctx);
+                imageView.setImageBitmap(photo.getImage());
+                imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+                linearLayout.addView(imageView);
+            }
         }
         return row;
     }
