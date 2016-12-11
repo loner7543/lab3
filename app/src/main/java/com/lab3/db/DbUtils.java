@@ -463,4 +463,25 @@ public class DbUtils extends SQLiteOpenHelper {
             while (cursor.moveToNext());
         }
     }
+
+    public void deleteCascadePhoto(SQLiteDatabase database,Photo photo){
+        ArrayList<Integer> removedCategoryIds = new ArrayList<>();
+        deleteEntity(database,DbUtils.PHOTO_TABLE,DbUtils.PHOTO_ID,new String[]{String.valueOf(photo.getId())});
+        sqlQuery = "select * from "+TIME_PHOTO_TABLE+" where "+PHOTO_ID_REF+" ="+String.valueOf(photo.getId());
+        Cursor cursor = database.rawQuery(sqlQuery,null,null);
+        deleteEntity(database,TIME_PHOTO_TABLE,PHOTO_ID_REF,new String[]{String.valueOf(photo.getId())});
+        cursor.moveToFirst();
+        int catIdIdx = cursor.getColumnIndex(TIME_ID_REF);
+        int categoryIdValue;
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                categoryIdValue = cursor.getInt(catIdIdx);
+                removedCategoryIds.add(categoryIdValue);
+            }
+            while (cursor.moveToNext());
+        }
+        for (int id:removedCategoryIds){
+            deleteTimeRecord(database,id);
+        }
+    }
 }

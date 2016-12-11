@@ -61,7 +61,7 @@ public class PhotoActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     public void onDeletePhoto(View view){
-        utils.deleteEntity(database,DbUtils.PHOTO_TABLE,DbUtils.PHOTO_ID,new String[]{String.valueOf(selectedPhoto.getId())});
+        utils.deleteCascadePhoto(database,selectedPhoto);
         allPhoto.remove(selectedPhoto);
         adapter.notifyDataSetChanged();
     }

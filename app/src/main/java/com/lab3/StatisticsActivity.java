@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.androidplot.pie.PieChart;
 import com.androidplot.pie.PieRenderer;
@@ -90,6 +91,7 @@ public class StatisticsActivity extends AppCompatActivity {
     }
 
     private void drawPie() {
+        try{
         Random random = new Random();
         ArrayList<PieData> times = new ArrayList<>();
         for (Category category:allCategories){
@@ -103,6 +105,11 @@ public class StatisticsActivity extends AppCompatActivity {
         }
         PieRenderer pieRenderer = graficoPartidos.getRenderer(PieRenderer.class);
         pieRenderer.setDonutSize((float) 0 / 100,   PieRenderer.DonutMode.PERCENT);
+        }
+        catch (NullPointerException e){
+            Toast toast = Toast.makeText(this,"Нет данных для построения круговой диаграммы",Toast.LENGTH_LONG);
+            toast.show();
+        }
     }
 
     public void onShowListStat(View view){
