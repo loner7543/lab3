@@ -28,10 +28,12 @@ import com.lab3.domain.TimeCategory;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+//TODO изменять даты со строк на числа
 public class StatisticsActivity extends AppCompatActivity implements View.OnClickListener  {
     private ListView frequent_sessions;
     private ListView time_from_category;
@@ -66,6 +68,8 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
     private RadioButton randomRadioButton;
     private boolean perMonth = false;
     private boolean ranadomPeriod = false;
+    private Calendar fromDateCalendar;
+    private Calendar toDateCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +103,8 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         monthButton.setOnClickListener(this);
         randomRadioButton = (RadioButton) findViewById(R.id.radioRandom);
         randomRadioButton.setOnClickListener(this);
+        fromDateCalendar = Calendar.getInstance();
+        toDateCalendar = Calendar.getInstance();
         drawPie();
     }
 
@@ -136,10 +142,10 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void onShowListStat(View view){
-        String toDate = "";
-        String fromDate = "";
+        long statDate = 0;
+        long endDate = 0;
         if (perMonth){
-            fromDate = "";
+            //fromDate = "";
         }
         if (ranadomPeriod){
             fromDay = fromDatePicker.getDayOfMonth();
@@ -155,8 +161,19 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
 
             toHour = toTomePicker.getCurrentHour();
             toMinute = toTomePicker.getCurrentMinute();
-            fromDate = getDate(fromYear,fromManth,fromDay,fronHour,fromMinute);
-            toDate = getDate(toYear,toMonth,toDay,toHour,toMinute);
+
+            fromDateCalendar.set(fromYear,fromManth,fromDay);
+            Date fromDate = fromDateCalendar.getTime();
+            fromDate.setHours(fronHour);
+            fromDate.setMinutes(fromMinute);
+
+            statDate = fromDate.getTime();
+
+            toDateCalendar.set(toYear,toMonth,toDay);
+            Date toDate = toDateCalendar.getTime();
+            toDate.setHours(toHour);
+            toDate.setMinutes(toMinute);
+            endDate = toDate.getTime();
         }
         checked = time_from_category.getCheckedItemPositions();
         for (int i = 0; i < checked.size(); i++) {
@@ -168,7 +185,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         Intent intent = new Intent(this,TimePerCategory.class);
         int i = 0;
         for (Category c:selectedItems){
-            TimeCategory timeCategory = utils.sumTimePerCategory(database,c,fromDate,toDate);
+            TimeCategory timeCategory = utils.sumTimePerCategory(database,c,statDate,endDate);
             intent.putExtra("data"+i,timeCategory);
             i++;
         }

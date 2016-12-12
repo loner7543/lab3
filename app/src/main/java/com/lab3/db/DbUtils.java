@@ -449,8 +449,8 @@ public class DbUtils extends SQLiteOpenHelper {
         }
         return res;
 }
-    // TODO селект не работает(не компилится)
-    public TimeCategory sumTimePerCategory(SQLiteDatabase database,Category category,String startDate,String endDate) {
+    // TODO вставить данные и тестить
+    public TimeCategory sumTimePerCategory(SQLiteDatabase database,Category category,long startDate,long endDate) {
         sqlQuery = "select sum(TIME_SEGMENT) from TimeRecord where CATEGORY_ID=? and ( "+START_TIME+" BETWEEN "+startDate+" AND "+endDate+" )";
         String str = "";
         Cursor cursor = database.rawQuery(sqlQuery, new String[]{String.valueOf(category.getId())}, null);
