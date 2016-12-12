@@ -33,7 +33,8 @@
             android:name=".RecordScrollingActivity"
             android:label="@string/title_activity_record_scrolling"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".TimePerCategory"></activity>
+        <activity android:name=".TimePerCategory" />
+        <activity android:name=".SortActivity"></activity>
     </application>
 
 </manifest>

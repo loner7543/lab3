@@ -18,6 +18,7 @@ import com.androidplot.pie.PieChart;
 import com.androidplot.pie.PieRenderer;
 import com.androidplot.pie.Segment;
 import com.androidplot.pie.SegmentFormatter;
+import com.lab3.adapters.TimePerCategoryAdapter;
 import com.lab3.db.DbUtils;
 import com.lab3.domain.Category;
 import com.lab3.domain.PieData;
@@ -31,7 +32,6 @@ import java.util.Random;
 
 public class StatisticsActivity extends AppCompatActivity {
     private ListView frequent_sessions;
-    private ListView sum_time;
     private ListView time_from_category;
     private PieChart graficoPartidos;
     private SQLiteDatabase database;
@@ -66,7 +66,6 @@ public class StatisticsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         frequent_sessions = (ListView) findViewById(R.id.frequent_sessions);
-        sum_time = (ListView) findViewById(R.id.sum_time);
         time_from_category = (ListView) findViewById(R.id.time_from_category);
 
         fromDatePicker = (DatePicker) findViewById(R.id.fromDpStat);
@@ -88,8 +87,6 @@ public class StatisticsActivity extends AppCompatActivity {
         graficoPartidos.getBackgroundPaint().setColor(Color.WHITE);
         calendar = Calendar.getInstance();
         drawPie();
-        List<TimeCategory> ds = utils.sumTimeOrder(database,allCategories);
-        String s = "efdef";
     }
 
     private void drawPie() {
@@ -112,6 +109,11 @@ public class StatisticsActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(this,"Нет данных для построения круговой диаграммы",Toast.LENGTH_LONG);
             toast.show();
         }
+    }
+
+    public void onShowSortList(View view){
+        Intent intent = new Intent(this,SortActivity.class);
+        startActivity(intent);
     }
 
     public void onShowListStat(View view){

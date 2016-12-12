@@ -85,17 +85,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <ListView
-            android:id="@+id/sum_time"
-            android:layout_marginTop="@dimen/list_margin"
-            android:layout_below="@+id/title2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"></ListView>
-
         <Button
             android:id="@+id/sum_time_show_btn"
             android:layout_width="wrap_content"
-            android:layout_below="@+id/sum_time"
+            android:layout_below="@+id/title2"
+            android:onClick="onShowSortList"
             android:text="@string/show3"
             android:layout_alignParentRight="true"
             android:layout_height="wrap_content" />
