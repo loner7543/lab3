@@ -63,13 +63,13 @@ public class TimeRecordAdapter extends BaseAdapter {
             meetName.setText(record.getDescription());
 
             TextView startDate = (TextView) row.findViewById(R.id.start_time_value);
-            startDate.setText(record.getStartDate());
+            startDate.setText(String.valueOf(record.getStartDate()));
 
             TextView catrgory = (TextView) row.findViewById(R.id.category_value);
             catrgory.setText(record.getCategory().getCategoryName());
 
             TextView endTime = (TextView) row.findViewById(R.id.etv);
-            endTime.setText(record.getEndDate());
+            endTime.setText(String.valueOf(record.getEndDate()));
 
             TextView segment = (TextView) row.findViewById(R.id.segment_value);
             segment.setText(record.getOtr());

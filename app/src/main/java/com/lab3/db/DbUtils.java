@@ -15,6 +15,7 @@ import com.lab3.domain.Photo;
 import com.lab3.domain.TimeCategory;
 import com.lab3.domain.TimeRecord;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -70,8 +71,8 @@ public class DbUtils extends SQLiteOpenHelper {
             "\t`ID`\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,\n" +
             "\t`CATEGORY_ID`\tINTEGER,\n" +
             "\t`DDESCRIPTION`\tTEXT,\n" +
-            "\t`START_TIME`\tTEXT,\n" +
-            "\t`END_TIME`\tTEXT,\n" +
+            "\t`START_TIME`\tNUMERIC,\n" +
+            "\t`END_TIME`\tNUMERIC,\n" +
             "\t`TIME_SEGMENT`\tINTEGER,\n" +
             " FOREIGN KEY(CATEGORY_ID) REFERENCES Category(id) ON UPDATE CASCADE\n"+
             ");";
@@ -237,11 +238,27 @@ public class DbUtils extends SQLiteOpenHelper {
     public void initTimeTable(TimeRecord timeRecord,SQLiteDatabase database){
         ContentValues contentValues = new ContentValues();
         contentValues.put(CATEGORY_ID_REF,1);
-        contentValues.put(START_TIME,"11:10");
-        contentValues.put(END_TIME,"11:20");
+        contentValues.put(START_TIME,2016);
+        contentValues.put(END_TIME,2017);
         contentValues.put(TIME_SEGMENT,10);
         contentValues.put(DDESCRIPTION,"asdf");
-        insertData(database,contentValues,TIME_RECORD_TABLE);
+        database.insert(TIME_RECORD_TABLE,null,contentValues);
+
+        ContentValues contentValues1 = new ContentValues();
+        contentValues1.put(CATEGORY_ID_REF,1);
+        contentValues1.put(START_TIME,1121);
+        contentValues1.put(END_TIME,1121);
+        contentValues1.put(TIME_SEGMENT,10);
+        contentValues1.put(DDESCRIPTION,"efef");
+        database.insert(TIME_RECORD_TABLE,null,contentValues1);
+
+        ContentValues contentValues2 = new ContentValues();
+        contentValues2.put(CATEGORY_ID_REF,1);
+        contentValues2.put(START_TIME,1122);
+        contentValues2.put(END_TIME,1123);
+        contentValues2.put(TIME_SEGMENT,10);
+        contentValues2.put(DDESCRIPTION,"rgrg");
+        database.insert(TIME_RECORD_TABLE,null,contentValues2);
     }
 
     public List<TimeRecord> getAllTimes(SQLiteDatabase database){
@@ -251,7 +268,8 @@ public class DbUtils extends SQLiteOpenHelper {
         int i = 0;
         int IdIdx,descriptionIndex,startDateIdx,endDateIdx,segmentIdx,categoryIdx;
         int iDval,categoryId;
-        String startDate,endDate,segment,descValue;
+        long startDate,endDate;
+        String segment,descValue;
         Cursor cursor = getAllRecords(database,TIME_RECORD_TABLE);
         if (cursor != null && cursor.moveToFirst()) {
             IdIdx = cursor.getColumnIndex(CATEGORY_ID);
@@ -263,8 +281,8 @@ public class DbUtils extends SQLiteOpenHelper {
             do {
                 iDval = cursor.getInt(IdIdx);
                 descValue = cursor.getString(descriptionIndex);
-                startDate = cursor.getString(startDateIdx);
-                endDate = cursor.getString(endDateIdx);
+                startDate = cursor.getLong(startDateIdx);
+                endDate = cursor.getLong(endDateIdx);
                 segment = cursor.getString(segmentIdx);
                 categoryId = cursor.getInt(categoryIdx);
                 Category c = getCategoryById(database,categoryId);
@@ -431,8 +449,9 @@ public class DbUtils extends SQLiteOpenHelper {
         }
         return res;
 }
-    public TimeCategory sumTimePerCategory(SQLiteDatabase database,Category category) {
-        sqlQuery = "select sum(TIME_SEGMENT) from TimeRecord where CATEGORY_ID=?";
+    // TODO селект не работает(не компилится)
+    public TimeCategory sumTimePerCategory(SQLiteDatabase database,Category category,String startDate,String endDate) {
+        sqlQuery = "select sum(TIME_SEGMENT) from TimeRecord where CATEGORY_ID=? and ( "+START_TIME+" BETWEEN "+startDate+" AND "+endDate+" )";
         String str = "";
         Cursor cursor = database.rawQuery(sqlQuery, new String[]{String.valueOf(category.getId())}, null);
         if (cursor != null && cursor.moveToFirst()) {
@@ -476,6 +495,29 @@ public class DbUtils extends SQLiteOpenHelper {
             }
         });
         return res;
+    }
+
+    //TODO Исправить после того как исправишь отображение
+    public List<TimeCategory> getFrequent(SQLiteDatabase database){
+        sqlQuery = "select "+CATEGORY_ID+", count("+CATEGORY_ID+")"+" from "+TIME_RECORD_TABLE+" group by "+CATEGORY_ID;
+        List<TimeCategory> result  = new LinkedList<>();
+        Cursor cursor = database.rawQuery(sqlQuery,null,null);
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(CATEGORY_ID);
+        int idValue;//значение id
+
+        int count_isx = cursor.getColumnIndex("count(ID)");
+        int count_value;
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                idValue = cursor.getInt(idx);
+                count_value = cursor.getInt(count_isx);
+                TimeCategory c = new TimeCategory(getCategoryById(database,idValue),count_value);
+                result.add(c);
+            }
+            while (cursor.moveToNext());
+        }
+        return result;
     }
 
     /**Каскадное удаление категории*/

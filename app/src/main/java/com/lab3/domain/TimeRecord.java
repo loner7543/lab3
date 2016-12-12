@@ -9,14 +9,14 @@ import java.util.List;
  */
 public class TimeRecord implements Serializable {
     private  int Id;
-    private String StartDate;
-    private String EndDate;
+    private long StartDate;
+    private long EndDate;
     private String Description;
     private Category Category;
     private String Otr;
     private List<Photo> photos;
 
-    public TimeRecord(String startDate, String endDate, String description, com.lab3.domain.Category category, List<Photo> photo, String otr) {
+    public TimeRecord(long startDate, long endDate, String description, com.lab3.domain.Category category, List<Photo> photo, String otr) {
         StartDate = startDate;
         EndDate = endDate;
         Description = description;
@@ -29,7 +29,7 @@ public class TimeRecord implements Serializable {
         Description = description;
     }
 
-    public TimeRecord(int id, String startDate, String endDate, String description, com.lab3.domain.Category category, String otr, List<Photo> photos) {
+    public TimeRecord(int id, long startDate, long endDate, String description, com.lab3.domain.Category category, String otr, List<Photo> photos) {
         Id = id;
         StartDate = startDate;
         EndDate = endDate;
@@ -39,7 +39,7 @@ public class TimeRecord implements Serializable {
         this.photos = photos;
     }
 
-    public TimeRecord(int id, String otr, com.lab3.domain.Category category, String description, String endDate, String startDate) {
+    public TimeRecord(int id, String otr, com.lab3.domain.Category category, String description, long endDate, long startDate) {
         Id = id;
         Otr = otr;
         Category = category;
@@ -52,19 +52,19 @@ public class TimeRecord implements Serializable {
 
     }
 
-    public String getStartDate() {
+    public long getStartDate() {
         return StartDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(long startDate) {
         StartDate = startDate;
     }
 
-    public String getEndDate() {
+    public long getEndDate() {
         return EndDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(long endDate) {
         EndDate = endDate;
     }
 

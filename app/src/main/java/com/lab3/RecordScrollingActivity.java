@@ -15,6 +15,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 
@@ -27,6 +29,8 @@ import com.lab3.domain.TimeRecord;
 import org.apache.commons.lang.math.NumberUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -75,6 +79,8 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
     private SerialPhoto serialPhoto;
     private Photo photo;
     private Bitmap bitmap;
+    private Calendar fromCalendar;
+    private Calendar toCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,23 +159,35 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
     }
 
     public void onAddData(View view){
+        fromCalendar = Calendar.getInstance();
+        toCalendar = Calendar.getInstance();
+
         fromYear = fromDatePicker.getYear();
         fromMonth = fromDatePicker.getMonth();
         fromDay = fromDatePicker.getDayOfMonth();
+        fromCalendar.set(fromYear,fromMonth,fromDay);
+        Date fromDate = fromCalendar.getTime();
 
         toYear = toDatePicker.getYear();
         toMonth = toDatePicker.getMonth();
         toDay = toDatePicker.getDayOfMonth();
+        toCalendar.set(toYear,toMonth,toDay);
+        Date toDate = toCalendar.getTime();
+
         startHour = startTime.getCurrentHour();
         startMinute = startTime.getCurrentMinute();
-        String startTimeStr = getDate(fromYear,fromMonth,fromDay,startHour,startMinute);
+        fromDate.setHours(startHour);
+        fromDate.setMinutes(startMinute);
+
         endHour = endTime.getCurrentHour();
         endMinute = endTime.getCurrentMinute();
-        String endTimeStr = getDate(toYear,toMonth,toDay,endHour,endMinute);
+        toDate.setHours(endHour);
+        toDate.setMinutes(endMinute);
+
         String  description = descriptionEdit.getText().toString();
         String segment = segmentEdit.getText().toString();
         validate(segment);
-        TimeRecord newDaata = new TimeRecord(startTimeStr,endTimeStr,description,selectedCategory,selectedListPhotos,segment);
+        TimeRecord newDaata = new TimeRecord(fromDate.getTime(),toDate.getTime(),description,selectedCategory,selectedListPhotos,segment);
         utils.insertTimeRecord(database,newDaata);
         intent = new Intent();
         newDaata.setPhoto(null);
@@ -185,7 +203,7 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
     }
 
     public String getDate(int year,int month,int day,int hour,int minute ){
-        String s = String.valueOf(year)+":"+String.valueOf(month)+":"+String.valueOf(day)+":"+String.valueOf(hour)+":"+String.valueOf(minute);
+        String s = String.valueOf(year)+"-"+String.valueOf(month)+"-"+String.valueOf(day)+" "+String.valueOf(hour)+":"+String.valueOf(minute);
         return s;
     }
 

@@ -13,8 +13,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
+        <RadioGroup
+            android:id="@+id/filter_type_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <RadioButton
+                android:id="@+id/radioMonth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/stat_monyh"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/radioRandom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rendom_perod" />
+        </RadioGroup>
+
         <Spinner
             android:id="@+id/months"
+            android:layout_below="@+id/filter_type_radio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
         </Spinner>
@@ -75,6 +95,7 @@
             android:id="@+id/frequent_sessions_btn"
             android:layout_below="@+id/frequent_sessions"
             android:layout_width="wrap_content"
+            android:onClick="onShowFreqList"
             android:layout_alignParentRight="true"
             android:layout_height="wrap_content" />
 

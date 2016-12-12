@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -30,7 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class StatisticsActivity extends AppCompatActivity {
+public class StatisticsActivity extends AppCompatActivity implements View.OnClickListener  {
     private ListView frequent_sessions;
     private ListView time_from_category;
     private PieChart graficoPartidos;
@@ -59,6 +61,12 @@ public class StatisticsActivity extends AppCompatActivity {
     private int toHour;
     private int toMinute;
 
+    private RadioGroup radioGroup;
+    private RadioButton monthButton;
+    private RadioButton randomRadioButton;
+    private boolean perMonth = false;
+    private boolean ranadomPeriod = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +94,11 @@ public class StatisticsActivity extends AppCompatActivity {
         graficoPartidos = (PieChart) findViewById(R.id.asdf);
         graficoPartidos.getBackgroundPaint().setColor(Color.WHITE);
         calendar = Calendar.getInstance();
+        radioGroup = (RadioGroup) findViewById(R.id.filter_type_radio);
+        monthButton = (RadioButton) findViewById(R.id.radioMonth);
+        monthButton.setOnClickListener(this);
+        randomRadioButton = (RadioButton) findViewById(R.id.radioRandom);
+        randomRadioButton.setOnClickListener(this);
         drawPie();
     }
 
@@ -116,21 +129,35 @@ public class StatisticsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void onShowFreqList(View view){
+        List<TimeCategory> data = utils.getFrequent(database);
+        TimePerCategoryAdapter adapter = new TimePerCategoryAdapter(data,getApplicationContext(),R.layout.category_time);
+        frequent_sessions.setAdapter(adapter);
+    }
+
     public void onShowListStat(View view){
-        fromDay = fromDatePicker.getDayOfMonth();
-        fromManth = fromDatePicker.getMonth();
-        fromYear = fromDatePicker.getYear();
+        String toDate = "";
+        String fromDate = "";
+        if (perMonth){
+            fromDate = "";
+        }
+        if (ranadomPeriod){
+            fromDay = fromDatePicker.getDayOfMonth();
+            fromManth = fromDatePicker.getMonth();
+            fromYear = fromDatePicker.getYear();
 
-        fronHour = fromTimePicker.getCurrentHour();
-        fromMinute = fromTimePicker.getCurrentMinute();
+            fronHour = fromTimePicker.getCurrentHour();
+            fromMinute = fromTimePicker.getCurrentMinute();
 
-        toDay = toDatePicker.getMonth();
-        toMonth = toDatePicker.getDayOfMonth();
-        toYear = toDatePicker.getYear();
+            toDay = toDatePicker.getMonth();
+            toMonth = toDatePicker.getDayOfMonth();
+            toYear = toDatePicker.getYear();
 
-        toHour = toTomePicker.getCurrentHour();
-        toMinute = toTomePicker.getCurrentMinute();
-
+            toHour = toTomePicker.getCurrentHour();
+            toMinute = toTomePicker.getCurrentMinute();
+            fromDate = getDate(fromYear,fromManth,fromDay,fronHour,fromMinute);
+            toDate = getDate(toYear,toMonth,toDay,toHour,toMinute);
+        }
         checked = time_from_category.getCheckedItemPositions();
         for (int i = 0; i < checked.size(); i++) {
             int position = checked.keyAt(i);
@@ -141,7 +168,7 @@ public class StatisticsActivity extends AppCompatActivity {
         Intent intent = new Intent(this,TimePerCategory.class);
         int i = 0;
         for (Category c:selectedItems){
-            TimeCategory timeCategory = utils.sumTimePerCategory(database,c);
+            TimeCategory timeCategory = utils.sumTimePerCategory(database,c,fromDate,toDate);
             intent.putExtra("data"+i,timeCategory);
             i++;
         }
@@ -150,4 +177,23 @@ public class StatisticsActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onClick(View view) {
+        RadioButton rb = (RadioButton)view;
+        switch (rb.getId()){
+            case R.id.radioMonth:{
+                perMonth = true;
+                break;
+            }
+            case R.id.radioRandom:{
+                ranadomPeriod = true;
+                break;
+            }
+        }
+    }
+
+    public String getDate(int year,int month,int day,int hour,int minute ) {
+        String s = String.valueOf(year) + "-" + String.valueOf(month) + "-" + String.valueOf(day) + " " + String.valueOf(hour) + ":" + String.valueOf(minute);
+        return s;
+    }
 }

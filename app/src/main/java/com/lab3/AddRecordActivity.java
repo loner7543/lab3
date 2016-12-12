@@ -21,6 +21,7 @@ import com.lab3.domain.TimeRecord;
 import org.apache.commons.lang.math.NumberUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -50,6 +51,8 @@ public class AddRecordActivity extends AppCompatActivity implements Comparable {
     private int endMinute;
 
     private Intent intent;
+    private Calendar fromCalendar;
+    private Calendar toCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +108,8 @@ public class AddRecordActivity extends AppCompatActivity implements Comparable {
         segmentEdit = (EditText) findViewById(R.id.segment_EditText);
 
         selectedListPhotos = new LinkedList<>();
+        fromCalendar = Calendar.getInstance();
+        toCalendar = Calendar.getInstance();
     }
 
     public void onAddData(View view){
@@ -113,11 +118,10 @@ public class AddRecordActivity extends AppCompatActivity implements Comparable {
         String startTimeStr = startHour+":"+startMinute;
         endHour = endTime.getCurrentHour();
         endMinute = endTime.getCurrentMinute();
-        String endTimeStr = endHour+":"+endMinute;
         String  description = descriptionEdit.getText().toString();
         String segment = segmentEdit.getText().toString();
         validate(segment);
-        TimeRecord newDaata = new TimeRecord(startTimeStr,endTimeStr,description,selectedCategory,selectedListPhotos,segment);
+        TimeRecord newDaata = new TimeRecord(111,111,description,selectedCategory,selectedListPhotos,segment);
         utils.insertTimeRecord(database,newDaata);
         intent = new Intent();
         setResult(RESULT_OK, intent);
