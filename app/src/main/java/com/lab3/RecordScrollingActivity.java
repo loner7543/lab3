@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 
@@ -30,12 +31,12 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-public class RecordScrollingActivity extends AppCompatActivity implements Comparable {
+public class RecordScrollingActivity extends AppCompatActivity implements Comparable,AdapterView.OnItemClickListener {
 
     private DbUtils utils;
     private SQLiteDatabase database;
     private Spinner spinner;//для категорий
-    private Spinner photoSpinner;
+    private GridView gridView;
     private CustomPhotoAdapter customPhotoAdapter;
     private Context context;
     private List<Photo> allPhoto;
@@ -52,7 +53,7 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
     private List<Photo> selectedListPhotos;//фотки которые пользователь наберет из спинера
     private DatePicker fromDatePicker;
     private DatePicker toDatePicker;
-    private Spinner MonthSpinner;
+
 
     private int fromYear;
     private int toYear;
@@ -89,7 +90,6 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
         editedData = (TimeRecord) dataIntent.getSerializableExtra("data");
         serialPhoto = (SerialPhoto) dataIntent.getSerializableExtra("photo0");
         timeRecord = (TimeRecord) dataIntent.getSerializableExtra("data");
-        //bitmap = DbBitmapUtility.getImage(serialPhoto.getData());//пока не пофиксил
         utils = new DbUtils(this, DbUtils.DATABASE_NAME, DbUtils.DATABASE_VERSION);
         context = getApplicationContext();
         database = utils.getWritableDatabase();//дает бд на запись
@@ -116,22 +116,10 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
 
         allPhoto = utils.getAllPhoto(database);
 
-        photoSpinner = (Spinner) findViewById(R.id.photoSpinner);
+        gridView = (GridView) findViewById(R.id.gridView);
+        gridView.setOnItemClickListener(this);
         customPhotoAdapter = new CustomPhotoAdapter(context,R.layout.galary_item,allPhoto);
-        photoSpinner.setAdapter(customPhotoAdapter);
-        photoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                selectedPhoto = (Photo) adapterView.getItemAtPosition(i);
-                selectedListPhotos.add(selectedPhoto);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
+        gridView.setAdapter(customPhotoAdapter);
 
         addDataBtn = (Button) findViewById(R.id.addRecord);
         addDataBtn.setText(dataIntent.getStringExtra("btn_text"));
@@ -151,7 +139,6 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
             descriptionEdit.setText(timeRecord.getDescription());
             segmentEdit.setText(timeRecord.getOtr());
         }
-        MonthSpinner = (Spinner) findViewById(R.id.months);
     }
 
     public void onAddData(View view){
@@ -211,5 +198,14 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
     @Override
     public int compareTo(Object o) {
         return 0;
+    }
+
+    /*
+    * Обрабтка клика по галерее
+    * */
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Photo item = (Photo) adapterView.getItemAtPosition(i);
+        selectedListPhotos.add(item);
     }
 }

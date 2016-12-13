@@ -10,20 +10,15 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.lab3.TimeRecordActivity">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:id="@+id/mainscroll"
-        android:layout_height="500dp">
         <ListView
             android:id="@+id/timeRecord_list"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"></ListView>
+            android:layout_height="500dp"></ListView>
 
-    </ScrollView>
 
     <Button
         android:id="@+id/addTime"
-        android:layout_below="@+id/mainscroll"
+        android:layout_below="@+id/timeRecord_list"
         android:onClick="addRecord"
         android:text="@string/add_btn"
         android:layout_width="wrap_content"
@@ -31,7 +26,7 @@
 
     <Button
         android:id="@+id/editRecord"
-        android:layout_below="@+id/mainscroll"
+        android:layout_below="@+id/timeRecord_list"
         android:layout_toRightOf="@+id/addTime"
         android:text="@string/editBtn"
         android:onClick="EditRecord"
@@ -42,7 +37,7 @@
         android:id="@+id/deleteTime"
         android:text="@string/delete_btn"
         android:onClick="deleteRecord"
-        android:layout_below="@+id/mainscroll"
+        android:layout_below="@+id/timeRecord_list"
         android:layout_toRightOf="@+id/editRecord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

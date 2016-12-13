@@ -13,6 +13,7 @@ import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -33,7 +34,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-//TODO изменять даты со строк на числа
 public class StatisticsActivity extends AppCompatActivity implements View.OnClickListener  {
     private ListView frequent_sessions;
     private ListView time_from_category;
@@ -70,6 +70,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
     private boolean ranadomPeriod = false;
     private Calendar fromDateCalendar;
     private Calendar toDateCalendar;
+    private Spinner MonthSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +106,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         randomRadioButton.setOnClickListener(this);
         fromDateCalendar = Calendar.getInstance();
         toDateCalendar = Calendar.getInstance();
+        MonthSpinner = (Spinner) findViewById(R.id.months);
         drawPie();
     }
 
