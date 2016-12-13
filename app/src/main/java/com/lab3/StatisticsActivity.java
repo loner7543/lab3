@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseBooleanArray;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.ListView;
@@ -21,8 +22,10 @@ import com.androidplot.pie.PieChart;
 import com.androidplot.pie.PieRenderer;
 import com.androidplot.pie.Segment;
 import com.androidplot.pie.SegmentFormatter;
+import com.lab3.adapters.MonthAdapter;
 import com.lab3.adapters.TimePerCategoryAdapter;
 import com.lab3.db.DbUtils;
+import com.lab3.domain.AppMonth;
 import com.lab3.domain.Category;
 import com.lab3.domain.PieData;
 import com.lab3.domain.TimeCategory;
@@ -34,7 +37,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class StatisticsActivity extends AppCompatActivity implements View.OnClickListener  {
+public class StatisticsActivity extends AppCompatActivity implements View.OnClickListener,AdapterView.OnItemSelectedListener {
     private ListView frequent_sessions;
     private ListView time_from_category;
     private PieChart graficoPartidos;
@@ -74,6 +77,9 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
     private Calendar fromDateCalendar;
     private Calendar toDateCalendar;
     private Spinner MonthSpinner;
+    private MonthAdapter monthAdapter;
+    private List<AppMonth> months;
+    private AppMonth selectedMonth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +115,11 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         randomRadioButton.setOnClickListener(this);
         fromDateCalendar = Calendar.getInstance();
         toDateCalendar = Calendar.getInstance();
+        initMonths();
+        monthAdapter = new MonthAdapter(months,this,R.layout.month_item);
         MonthSpinner = (Spinner) findViewById(R.id.months);
+        MonthSpinner.setAdapter(monthAdapter);
+        MonthSpinner.setOnItemSelectedListener(this);
         drawPie();
     }
 
@@ -172,7 +182,11 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
 
     private void setDate() {
         if (perMonth){
-            //fromDate = "";
+            calendar.set(2016,selectedMonth.getValue(),0,0,0);
+            startDate = calendar.getTime().getTime();
+
+            calendar.set(2016,selectedMonth.getValue()+1,0,0,0);
+            endDate = calendar.getTime().getTime();
             perMonth = false;
         }
         if (ranadomPeriod){
@@ -222,4 +236,29 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        selectedMonth = (AppMonth) MonthSpinner.getSelectedItem();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+
+    public void initMonths(){
+        months = new LinkedList<>();
+        months.add(new AppMonth("Январь",0));
+        months.add(new AppMonth("Февраль",1));
+        months.add(new AppMonth("Март",2));
+        months.add(new AppMonth("Апрель",3));
+        months.add(new AppMonth("Май",4));
+        months.add(new AppMonth("Июнь",5));
+        months.add(new AppMonth("Июль",6));
+        months.add(new AppMonth("Август",7));
+        months.add(new AppMonth("Сентябрь",8));
+        months.add(new AppMonth("Октябрь",9));
+        months.add(new AppMonth("Ноябрь",10));
+        months.add(new AppMonth("Декабпь",11));
+    }
 }

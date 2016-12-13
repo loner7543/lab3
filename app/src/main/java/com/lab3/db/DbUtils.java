@@ -268,6 +268,26 @@ public class DbUtils extends SQLiteOpenHelper {
         contentValues2.put(TIME_SEGMENT,10);
         contentValues2.put(DDESCRIPTION,"rgrg");
         database.insert(TIME_RECORD_TABLE,null,contentValues2);
+
+        ContentValues contentValues3 = new ContentValues();
+        contentValues3.put(CATEGORY_ID_REF,2);
+        calendar.set(2016,2,21,1,0);
+        contentValues3.put(START_TIME,calendar.getTimeInMillis());
+        calendar.set(2016,3,21,1,0);
+        contentValues3.put(END_TIME,calendar.getTimeInMillis());
+        contentValues3.put(TIME_SEGMENT,50);
+        contentValues3.put(DDESCRIPTION,"rgrg");
+        database.insert(TIME_RECORD_TABLE,null,contentValues3);
+
+        ContentValues contentValues4 = new ContentValues();
+        contentValues4.put(CATEGORY_ID_REF,3);
+        calendar.set(2016,2,21,1,0);
+        contentValues4.put(START_TIME,calendar.getTimeInMillis());
+        calendar.set(2016,3,21,1,0);
+        contentValues4.put(END_TIME,calendar.getTimeInMillis());
+        contentValues4.put(TIME_SEGMENT,5);
+        contentValues4.put(DDESCRIPTION,"rgrg");
+        database.insert(TIME_RECORD_TABLE,null,contentValues4);
     }
 
     public List<TimeRecord> getAllTimes(SQLiteDatabase database){
