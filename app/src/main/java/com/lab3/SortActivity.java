@@ -1,5 +1,6 @@
 package com.lab3;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,18 +20,25 @@ public class SortActivity extends AppCompatActivity {
     private DbUtils utils;
     private List<Category> allCategories;
     private TimePerCategoryAdapter adapter;
+    private long startDate;
+    private long endDate;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sort);
         setTitle("Самое большое суммарное время по категориям");
+        intent = getIntent();
         utils = new DbUtils(this, DbUtils.DATABASE_NAME, DbUtils.DATABASE_VERSION);
         database = utils.getWritableDatabase();
         allCategories = utils.parseCursor(utils.getAllRecords(database,DbUtils.CATEGORY_TABLE));
 
         listView = (ListView) findViewById(R.id.sum_time_list);
-        sortData  = utils.sumTimeOrder(database,allCategories);
+
+        startDate = intent.getLongExtra("startDate",0);
+        endDate = intent.getLongExtra("endDate",0);
+        sortData  = utils.sumTimeOrder(database,allCategories,startDate,endDate);
         adapter = new TimePerCategoryAdapter(sortData,this,R.layout.category_time);
         listView.setAdapter(adapter);
 

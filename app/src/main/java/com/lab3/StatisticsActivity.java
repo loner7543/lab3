@@ -63,6 +63,9 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
     private int toHour;
     private int toMinute;
 
+    private long startDate;
+    private long endDate;
+
     private RadioGroup radioGroup;
     private RadioButton monthButton;
     private RadioButton randomRadioButton;
@@ -132,8 +135,12 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    //ревлизация не совсем ок - кидаю даты на др активити и там делаю запрос  используя их
     public void onShowSortList(View view){
         Intent intent = new Intent(this,SortActivity.class);
+        setDate();
+        intent.putExtra("startDate",startDate);
+        intent.putExtra("endDate",endDate);
         startActivity(intent);
     }
 
@@ -144,39 +151,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void onShowListStat(View view){
-        long statDate = 0;
-        long endDate = 0;
-        if (perMonth){
-            //fromDate = "";
-        }
-        if (ranadomPeriod){
-            fromDay = fromDatePicker.getDayOfMonth();
-            fromManth = fromDatePicker.getMonth();
-            fromYear = fromDatePicker.getYear();
-
-            fronHour = fromTimePicker.getCurrentHour();
-            fromMinute = fromTimePicker.getCurrentMinute();
-
-            toDay = toDatePicker.getMonth();
-            toMonth = toDatePicker.getDayOfMonth();
-            toYear = toDatePicker.getYear();
-
-            toHour = toTomePicker.getCurrentHour();
-            toMinute = toTomePicker.getCurrentMinute();
-
-            fromDateCalendar.set(fromYear,fromManth,fromDay);
-            Date fromDate = fromDateCalendar.getTime();
-            fromDate.setHours(fronHour);
-            fromDate.setMinutes(fromMinute);
-
-            statDate = fromDate.getTime();
-
-            toDateCalendar.set(toYear,toMonth,toDay);
-            Date toDate = toDateCalendar.getTime();
-            toDate.setHours(toHour);
-            toDate.setMinutes(toMinute);
-            endDate = toDate.getTime();
-        }
+        setDate();
         checked = time_from_category.getCheckedItemPositions();
         for (int i = 0; i < checked.size(); i++) {
             int position = checked.keyAt(i);
@@ -187,12 +162,48 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         Intent intent = new Intent(this,TimePerCategory.class);
         int i = 0;
         for (Category c:selectedItems){
-            TimeCategory timeCategory = utils.sumTimePerCategory(database,c,statDate,endDate);
+            TimeCategory timeCategory = utils.sumTimePerCategory(database,c,startDate,endDate);
             intent.putExtra("data"+i,timeCategory);
             i++;
         }
         intent.putExtra("count",i);
         startActivity(intent);
+    }
+
+    private void setDate() {
+        if (perMonth){
+            //fromDate = "";
+            perMonth = false;
+        }
+        if (ranadomPeriod){
+            fromDay = fromDatePicker.getDayOfMonth();
+            fromManth = fromDatePicker.getMonth();
+            fromYear = fromDatePicker.getYear();
+
+            fronHour = fromTimePicker.getCurrentHour();
+            fromMinute = fromTimePicker.getCurrentMinute();
+
+            toMonth = toDatePicker.getMonth();
+            toDay = toDatePicker.getDayOfMonth();
+            toYear = toDatePicker.getYear();
+
+            toHour = toTomePicker.getCurrentHour();
+            toMinute = toTomePicker.getCurrentMinute();
+
+            fromDateCalendar.set(fromYear,fromManth,fromDay);
+            Date fromDate = fromDateCalendar.getTime();
+            fromDate.setHours(fronHour);
+            fromDate.setMinutes(fromMinute);
+
+            startDate = fromDate.getTime();
+
+            toDateCalendar.set(toYear,toMonth,toDay);
+            Date toDate = toDateCalendar.getTime();
+            toDate.setHours(toHour);
+            toDate.setMinutes(toMinute);
+            endDate = toDate.getTime();
+            ranadomPeriod = false;
+        }
     }
 
 
@@ -211,8 +222,4 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    public String getDate(int year,int month,int day,int hour,int minute ) {
-        String s = String.valueOf(year) + "-" + String.valueOf(month) + "-" + String.valueOf(day) + " " + String.valueOf(hour) + ":" + String.valueOf(minute);
-        return s;
-    }
 }

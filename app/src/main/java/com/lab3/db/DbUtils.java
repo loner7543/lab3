@@ -17,6 +17,7 @@ import com.lab3.domain.TimeRecord;
 
 import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -85,6 +86,7 @@ public class DbUtils extends SQLiteOpenHelper {
 
 
     public String sqlQuery = "";//cтрока для запросов
+    private Calendar calendar;
 
     public DbUtils(Context context, String name,  int version) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -236,26 +238,33 @@ public class DbUtils extends SQLiteOpenHelper {
     }
 
     public void initTimeTable(TimeRecord timeRecord,SQLiteDatabase database){
+        calendar = Calendar.getInstance();
+        calendar.set(2016,0,5,1,0);
         ContentValues contentValues = new ContentValues();
         contentValues.put(CATEGORY_ID_REF,1);
-        contentValues.put(START_TIME,2016);
-        contentValues.put(END_TIME,2017);
+        contentValues.put(START_TIME,calendar.getTimeInMillis());
+        calendar.set(2016,0,31);
+        contentValues.put(END_TIME,calendar.getTimeInMillis());
         contentValues.put(TIME_SEGMENT,10);
         contentValues.put(DDESCRIPTION,"asdf");
         database.insert(TIME_RECORD_TABLE,null,contentValues);
 
         ContentValues contentValues1 = new ContentValues();
         contentValues1.put(CATEGORY_ID_REF,1);
-        contentValues1.put(START_TIME,1121);
-        contentValues1.put(END_TIME,1121);
+        calendar.set(2016,1,1,1,0);
+        contentValues1.put(START_TIME,calendar.getTimeInMillis());
+        calendar.set(2016,4,1,1,0);
+        contentValues1.put(END_TIME,calendar.getTimeInMillis());
         contentValues1.put(TIME_SEGMENT,10);
         contentValues1.put(DDESCRIPTION,"efef");
         database.insert(TIME_RECORD_TABLE,null,contentValues1);
 
         ContentValues contentValues2 = new ContentValues();
         contentValues2.put(CATEGORY_ID_REF,1);
-        contentValues2.put(START_TIME,1122);
-        contentValues2.put(END_TIME,1123);
+        calendar.set(2016,2,21,1,0);
+        contentValues2.put(START_TIME,calendar.getTimeInMillis());
+        calendar.set(2016,3,21,1,0);
+        contentValues2.put(END_TIME,calendar.getTimeInMillis());
         contentValues2.put(TIME_SEGMENT,10);
         contentValues2.put(DDESCRIPTION,"rgrg");
         database.insert(TIME_RECORD_TABLE,null,contentValues2);
@@ -449,7 +458,6 @@ public class DbUtils extends SQLiteOpenHelper {
         }
         return res;
 }
-    // TODO вставить данные и тестить
     public TimeCategory sumTimePerCategory(SQLiteDatabase database,Category category,long startDate,long endDate) {
         sqlQuery = "select sum(TIME_SEGMENT) from TimeRecord where CATEGORY_ID=? and ( "+START_TIME+" BETWEEN "+startDate+" AND "+endDate+" )";
         String str = "";
@@ -466,9 +474,10 @@ public class DbUtils extends SQLiteOpenHelper {
         TimeCategory timePerCategory = new TimeCategory(category,res);
         return timePerCategory;
     }
-    public List<TimeCategory> sumTimeOrder(SQLiteDatabase database,List<Category> allCategories){
+    public List<TimeCategory> sumTimeOrder(SQLiteDatabase database,List<Category> allCategories,long startDate,long endDate){
         List<TimeCategory> res = new LinkedList<>();
-        sqlQuery = "select sum(TIME_SEGMENT) from TimeRecord where CATEGORY_ID=?";
+        int sd;
+        sqlQuery = "select sum(TIME_SEGMENT) from TimeRecord where CATEGORY_ID=? and ( "+START_TIME+" BETWEEN "+startDate+" AND "+endDate+" )";
         String str = "";
         for (Category c:allCategories){
             Cursor cursor = database.rawQuery(sqlQuery, new String[]{String.valueOf(c.getId())}, null);
@@ -480,7 +489,12 @@ public class DbUtils extends SQLiteOpenHelper {
                 }
                 while (cursor.moveToNext());
             }
-            int sd = Integer.valueOf(str);
+            if (str==null){
+                sd=0;
+            }
+            else {
+                sd = Integer.valueOf(str);
+            }
             TimeCategory timePerCategory = new TimeCategory(c,sd);
             res.add(timePerCategory);
         }
