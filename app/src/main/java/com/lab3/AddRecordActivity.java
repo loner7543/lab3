@@ -82,7 +82,7 @@ public class AddRecordActivity extends AppCompatActivity implements Comparable {
         allPhoto = utils.getAllPhoto(database);
 
         photoSpinner = (Spinner) findViewById(R.id.photoSpinner);
-        customPhotoAdapter = new CustomPhotoAdapter(context,R.layout.photo_spinner_item,allPhoto);
+        customPhotoAdapter = new CustomPhotoAdapter(context,R.layout.galary_item,allPhoto);
         photoSpinner.setAdapter(customPhotoAdapter);
         photoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

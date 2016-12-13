@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -15,8 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 
@@ -121,7 +117,7 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
         allPhoto = utils.getAllPhoto(database);
 
         photoSpinner = (Spinner) findViewById(R.id.photoSpinner);
-        customPhotoAdapter = new CustomPhotoAdapter(context,R.layout.photo_spinner_item,allPhoto);
+        customPhotoAdapter = new CustomPhotoAdapter(context,R.layout.galary_item,allPhoto);
         photoSpinner.setAdapter(customPhotoAdapter);
         photoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
