@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onShowTimeRecords(View view){
-        LaunchIntent = new Intent(this,TimeRecordActivity.class);
+        LaunchIntent = new Intent(this,TimeRecordScrollingActivity.class);
         startActivity(LaunchIntent);
     }
 }

@@ -117,4 +117,5 @@
     </string>
     <string name="stat_monyh">Статистика за месяц</string>
     <string name="rendom_perod">За произвольный период</string>
+    <string name="title_activity_time_record_scrolling">TimeRecordScrollingActivity</string>
 </resources>
