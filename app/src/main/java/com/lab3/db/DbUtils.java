@@ -288,6 +288,27 @@ public class DbUtils extends SQLiteOpenHelper {
         contentValues4.put(TIME_SEGMENT,5);
         contentValues4.put(DDESCRIPTION,"rgrg");
         database.insert(TIME_RECORD_TABLE,null,contentValues4);
+
+       /* //для фильтра по месяцу январь
+        ContentValues contentValues5  = new ContentValues();
+        contentValues5.put(CATEGORY_ID_REF,3);
+        calendar.set(2016,0,21,1,0);
+        contentValues5.put(START_TIME,calendar.getTimeInMillis());
+        calendar.set(2016,3,21,1,0);
+        contentValues5.put(END_TIME,calendar.getTimeInMillis());
+        contentValues5.put(TIME_SEGMENT,5);
+        contentValues5.put(DDESCRIPTION,"rgrg");
+        database.insert(TIME_RECORD_TABLE,null,contentValues5);
+
+        ContentValues contentValues6 = new ContentValues();
+        contentValues6.put(CATEGORY_ID_REF,3);
+        calendar.set(2016,0,19,1,0);
+        contentValues6.put(START_TIME,calendar.getTimeInMillis());
+        calendar.set(2016,3,21,1,0);
+        contentValues6.put(END_TIME,calendar.getTimeInMillis());
+        contentValues6.put(TIME_SEGMENT,5);
+        contentValues6.put(DDESCRIPTION,"rgrg");
+        database.insert(TIME_RECORD_TABLE,null,contentValues6);*/
     }
 
     public List<TimeRecord> getAllTimes(SQLiteDatabase database){
@@ -481,6 +502,7 @@ public class DbUtils extends SQLiteOpenHelper {
     public TimeCategory sumTimePerCategory(SQLiteDatabase database,Category category,long startDate,long endDate) {
         sqlQuery = "select sum(TIME_SEGMENT) from TimeRecord where CATEGORY_ID=? and ( "+START_TIME+" BETWEEN "+startDate+" AND "+endDate+" )";
         String str = "";
+        int res;
         Cursor cursor = database.rawQuery(sqlQuery, new String[]{String.valueOf(category.getId())}, null);
         if (cursor != null && cursor.moveToFirst()) {
             do {
@@ -490,7 +512,12 @@ public class DbUtils extends SQLiteOpenHelper {
             }
             while (cursor.moveToNext());
         }
-        int res = Integer.valueOf(str);
+        if (str==null){
+            res = 0;
+        }
+        else {
+            res = Integer.valueOf(str);
+        }
         TimeCategory timePerCategory = new TimeCategory(category,res);
         return timePerCategory;
     }

@@ -147,6 +147,11 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
 
     //ревлизация не совсем ок - кидаю даты на др активити и там делаю запрос  используя их
     public void onShowSortList(View view){
+        MonthSpinner.setEnabled(true);
+        toDatePicker.setEnabled(true);
+        fromDatePicker.setEnabled(true);
+        toTomePicker.setEnabled(true);
+        fromTimePicker.setEnabled(true);
         Intent intent = new Intent(this,SortActivity.class);
         setDate();
         intent.putExtra("startDate",startDate);
@@ -155,12 +160,24 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void onShowFreqList(View view){
+        MonthSpinner.setEnabled(true);
+
+        toDatePicker.setEnabled(true);
+        fromDatePicker.setEnabled(true);
+        toTomePicker.setEnabled(true);
+        fromTimePicker.setEnabled(true);
         List<TimeCategory> data = utils.getFrequent(database);
         TimePerCategoryAdapter adapter = new TimePerCategoryAdapter(data,getApplicationContext(),R.layout.category_time);
         frequent_sessions.setAdapter(adapter);
     }
 
     public void onShowListStat(View view){
+        MonthSpinner.setEnabled(true);
+
+        toDatePicker.setEnabled(true);
+        fromDatePicker.setEnabled(true);
+        toTomePicker.setEnabled(true);
+        fromTimePicker.setEnabled(true);
         setDate();
         checked = time_from_category.getCheckedItemPositions();
         for (int i = 0; i < checked.size(); i++) {
@@ -226,11 +243,24 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         RadioButton rb = (RadioButton)view;
         switch (rb.getId()){
             case R.id.radioMonth:{
+                MonthSpinner.setEnabled(true);
+
+                toDatePicker.setEnabled(false);
+                fromDatePicker.setEnabled(false);
+                toTomePicker.setEnabled(false);
+                fromTimePicker.setEnabled(false);
                 perMonth = true;
                 break;
             }
             case R.id.radioRandom:{
                 ranadomPeriod = true;
+                MonthSpinner.setEnabled(false);
+
+                toDatePicker.setEnabled(true);
+                fromDatePicker.setEnabled(true);
+                toTomePicker.setEnabled(true);
+                fromTimePicker.setEnabled(true);
+
                 break;
             }
         }
