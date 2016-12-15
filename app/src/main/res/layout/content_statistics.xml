@@ -87,8 +87,8 @@
         <ListView
             android:id="@+id/frequent_sessions"
             android:layout_below="@+id/title1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"></ListView>
+            android:layout_width="match_parent"
+            android:layout_height="300dp"></ListView>
 
         <Button
             android:text="@string/show3"

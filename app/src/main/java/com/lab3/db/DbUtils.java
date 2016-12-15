@@ -558,27 +558,12 @@ public class DbUtils extends SQLiteOpenHelper {
         return res;
     }
 
-    //TODO Исправить после того как исправишь отображение
-    public List<TimeCategory> getFrequent(SQLiteDatabase database){
-        sqlQuery = "select "+CATEGORY_ID+", count("+CATEGORY_ID+")"+" from "+TIME_RECORD_TABLE+" group by "+CATEGORY_ID;
-        List<TimeCategory> result  = new LinkedList<>();
+    public int getCountRecordFromCategory(SQLiteDatabase database,Category category,long startDate,long endDate){
+        int res = 0;
+        sqlQuery = "select * from "+TIME_RECORD_TABLE+" where "+CATEGORY_ID_REF+" ="+String.valueOf(category.getId()+" and "+START_TIME+" between "+startDate+" and "+endDate);
         Cursor cursor = database.rawQuery(sqlQuery,null,null);
-        cursor.moveToFirst();
-        int idx = cursor.getColumnIndex(CATEGORY_ID);
-        int idValue;//значение id
-
-        int count_isx = cursor.getColumnIndex("count(ID)");
-        int count_value;
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                idValue = cursor.getInt(idx);
-                count_value = cursor.getInt(count_isx);
-                TimeCategory c = new TimeCategory(getCategoryById(database,idValue),count_value);
-                result.add(c);
-            }
-            while (cursor.moveToNext());
-        }
-        return result;
+        res = cursor.getCount();
+        return res;
     }
 
     /**Каскадное удаление категории*/

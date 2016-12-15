@@ -32,6 +32,8 @@ import com.lab3.domain.TimeCategory;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -166,7 +168,22 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         fromDatePicker.setEnabled(true);
         toTomePicker.setEnabled(true);
         fromTimePicker.setEnabled(true);
-        List<TimeCategory> data = utils.getFrequent(database);
+        setDate();
+        List<TimeCategory> data = new LinkedList<>();
+        for (Category category:allCategories){
+            TimeCategory timeCategory = new TimeCategory(category,utils.getCountRecordFromCategory(database,category,startDate,endDate));
+            data.add(timeCategory);
+        }
+
+        Collections.sort(data, new Comparator<TimeCategory>() {
+            @Override
+            public int compare(TimeCategory timeCategory, TimeCategory t1) {
+                if(timeCategory.getSegmentValue()>t1.getSegmentValue()){
+                    return -1;
+                }
+                else return 1;
+            }
+        });
         TimePerCategoryAdapter adapter = new TimePerCategoryAdapter(data,getApplicationContext(),R.layout.category_time);
         frequent_sessions.setAdapter(adapter);
     }

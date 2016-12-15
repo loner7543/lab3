@@ -41,8 +41,8 @@ public class PhotoActivity extends AppCompatActivity implements AdapterView.OnIt
         phtoListView = (ListView) findViewById(R.id.photoList);
         utils = new DbUtils(this, DbUtils.DATABASE_NAME, DbUtils.DATABASE_VERSION);
         database = utils.getWritableDatabase();//дает бд на запись
-        utils.initPhotoTable(database,R.drawable.intellj,context); //работает - фотка в бду же есть
-       utils.initPhotoTable(database,R.drawable.git,context); //работает - фотка в бду же есть
+       // utils.initPhotoTable(database,R.drawable.intellj,context); //работает - фотка в бду же есть
+       //utils.initPhotoTable(database,R.drawable.git,context); //работает - фотка в бду же есть
 
         allPhoto = utils.getAllPhoto(database);
         phtoListView.setOnItemClickListener(this);
@@ -91,6 +91,7 @@ public class PhotoActivity extends AppCompatActivity implements AdapterView.OnIt
                utils.update(database,utils.PHOTO_TABLE,contentValues,utils.PHOTO_ID,new String[]{String.valueOf(photo.getId())});
                allPhoto.remove(selectedPhoto);
                allPhoto.add(photo);
+               adapter.notifyDataSetChanged();
                break;
            }
 
