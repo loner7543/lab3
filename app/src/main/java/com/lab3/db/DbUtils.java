@@ -184,6 +184,7 @@ public class DbUtils extends SQLiteOpenHelper {
                 i++;
             }
             while (cursor.moveToNext());
+            cursor.close();
         }
         return result;
     }
@@ -223,6 +224,7 @@ public class DbUtils extends SQLiteOpenHelper {
                 i++;
             }
             while (cursor.moveToNext());
+            cursor.close();
         }
         return  res;
     }
@@ -342,6 +344,7 @@ public class DbUtils extends SQLiteOpenHelper {
                 i++;
             }
             while (cursor.moveToNext());
+            cursor.close();
         }
         return res;
     }
@@ -362,6 +365,7 @@ public class DbUtils extends SQLiteOpenHelper {
                 i++;
             }
             while (cursor.moveToNext());
+            cursor.close();
         }
         return category;
     }
@@ -385,6 +389,7 @@ public class DbUtils extends SQLiteOpenHelper {
                 i++;
             }
             while (cursor.moveToNext());
+            cursor.close();
         }
         return photosByCategory;
     }
@@ -405,6 +410,7 @@ public class DbUtils extends SQLiteOpenHelper {
                 i++;
             }
             while (cursor.moveToNext());
+            cursor.close();
         }
         return photo;
     }
@@ -426,6 +432,7 @@ public class DbUtils extends SQLiteOpenHelper {
                 i++;
             }
             while (cursor.moveToNext());
+            cursor.close();
         }
         i = 0;
         return lst;
@@ -498,6 +505,7 @@ public class DbUtils extends SQLiteOpenHelper {
         else {
             res = Integer.valueOf(str);
         }
+        cursor.close();
         return res;
 }
     public TimeCategory sumTimePerCategory(SQLiteDatabase database,Category category,long startDate,long endDate) {
@@ -520,6 +528,7 @@ public class DbUtils extends SQLiteOpenHelper {
             res = Integer.valueOf(str);
         }
         TimeCategory timePerCategory = new TimeCategory(category,res);
+        cursor.close();
         return timePerCategory;
     }
     public List<TimeCategory> sumTimeOrder(SQLiteDatabase database,List<Category> allCategories,long startDate,long endDate){
@@ -564,6 +573,7 @@ public class DbUtils extends SQLiteOpenHelper {
         sqlQuery = "select * from "+TIME_RECORD_TABLE+" where "+CATEGORY_ID_REF+" ="+String.valueOf(category.getId()+" and "+START_TIME+" between "+startDate+" and "+endDate);
         Cursor cursor = database.rawQuery(sqlQuery,null,null);
         res = cursor.getCount();
+        cursor.close();
         return res;
     }
 
@@ -582,6 +592,7 @@ public class DbUtils extends SQLiteOpenHelper {
             }
             while (cursor.moveToNext());
         }
+        cursor.close();
     }
 
     public void deleteCascadePhoto(SQLiteDatabase database,Photo photo){
@@ -603,5 +614,6 @@ public class DbUtils extends SQLiteOpenHelper {
         for (int id:removedCategoryIds){
             deleteTimeRecord(database,id);
         }
+        cursor.close();
     }
 }

@@ -88,21 +88,29 @@ public class TimeRecordScrollingActivity extends AppCompatActivity implements Ad
     }
 
     public void EditRecord(View view){
-        Intent editedIntent = new Intent(this,RecordScrollingActivity.class);
-        editedIntent.putExtra("title","Изменить отметку времени");
-        editedIntent.putExtra("btn_text","Изменить запись");
-        editedIntent.putExtra("Action",EDIT_TIME_RECORD_CODE);
-        int i = 0;
-        List<Photo> photos = selectedRecord.getPhoto();
-        for (Photo photo:photos){
-            SerialPhoto serialPhoto = new SerialPhoto(photo.getId(),DbBitmapUtility.getBytes(photo.getImage()));
-            editedIntent.putExtra("photo"+i,serialPhoto);
+        try
+        {
+            Intent editedIntent = new Intent(this,RecordScrollingActivity.class);
+            editedIntent.putExtra("title","Изменить отметку времени");
+            editedIntent.putExtra("btn_text","Изменить запись");
+            editedIntent.putExtra("Action",EDIT_TIME_RECORD_CODE);
+            int i = 0;
+            List<Photo> photos = selectedRecord.getPhoto();
+            for (Photo photo:photos){
+                SerialPhoto serialPhoto = new SerialPhoto(photo.getId(),DbBitmapUtility.getBytes(photo.getImage()));
+                editedIntent.putExtra("photo"+i,serialPhoto);
+            }
+            i=0;
+            selectedRecord.setPhoto(null);
+            editedIntent.putExtra("data",selectedRecord);
+            editedIntent.putExtra("count",photos.size());
+            startActivityForResult(editedIntent,EDIT_TIME_RECORD_CODE);
         }
-        i=0;
-        selectedRecord.setPhoto(null);
-        editedIntent.putExtra("data",selectedRecord);
-        editedIntent.putExtra("count",photos.size());
-        startActivityForResult(editedIntent,EDIT_TIME_RECORD_CODE);
+        catch (NullPointerException e){
+            Toast toast = Toast.makeText(this,"У записи отсутствуют фотографии",Toast.LENGTH_LONG);
+            toast.show();
+        }
+
     }
 
     public void deleteRecord(View view){
