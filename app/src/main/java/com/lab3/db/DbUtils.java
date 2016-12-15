@@ -9,16 +9,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import com.lab3.DbBitmapUtility;
 import com.lab3.domain.Category;
 import com.lab3.domain.Photo;
 import com.lab3.domain.TimeCategory;
 import com.lab3.domain.TimeRecord;
 
-import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;

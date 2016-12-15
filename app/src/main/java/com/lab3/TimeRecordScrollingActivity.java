@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,6 +14,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.lab3.adapters.TimeRecordAdapter;
+import com.lab3.db.DbBitmapUtility;
 import com.lab3.db.DbUtils;
 import com.lab3.domain.Category;
 import com.lab3.domain.Photo;
@@ -97,7 +97,7 @@ public class TimeRecordScrollingActivity extends AppCompatActivity implements Ad
             int i = 0;
             List<Photo> photos = selectedRecord.getPhoto();
             for (Photo photo:photos){
-                SerialPhoto serialPhoto = new SerialPhoto(photo.getId(),DbBitmapUtility.getBytes(photo.getImage()));
+                SerialPhoto serialPhoto = new SerialPhoto(photo.getId(), DbBitmapUtility.getBytes(photo.getImage()));
                 editedIntent.putExtra("photo"+i,serialPhoto);
             }
             i=0;
@@ -124,6 +124,7 @@ public class TimeRecordScrollingActivity extends AppCompatActivity implements Ad
         selectedRecord = (TimeRecord) adapterView.getItemAtPosition(i);
     }
 
+    // TODO Дописать изменение запси времениб перерабоать бд
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(LOG_KEY, "requestCode = " + requestCode + ", resultCode = " + resultCode);
@@ -146,6 +147,20 @@ public class TimeRecordScrollingActivity extends AppCompatActivity implements Ad
                     break;
                 }
                 case EDIT_TIME_RECORD_CODE:{
+                    int i = 0;
+                    allRecords.remove(selectedRecord);
+                    int photoCount = data.getIntExtra("count",0);
+                    TimeRecord editedRecord = (TimeRecord) data.getSerializableExtra("data");
+                    List<Photo> newPhotos = new LinkedList<>();
+                    for (int j = 0;j<photoCount;j++)
+                    {
+                        SerialPhoto f = (SerialPhoto) data.getSerializableExtra("photo"+i);
+                        newPhotos.add(new Photo(DbBitmapUtility.getImage(f.getData()),f.getId()));
+                        i++;
+                    }
+                    editedRecord.setPhoto(newPhotos);
+                    allRecords.remove(selectedRecord);
+                    allRecords.add(editedRecord);
                     break;
                 }
                 default:{

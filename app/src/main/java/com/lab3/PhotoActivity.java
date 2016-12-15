@@ -14,6 +14,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.lab3.adapters.PhotoAdapter;
+import com.lab3.db.DbBitmapUtility;
 import com.lab3.db.DbUtils;
 import com.lab3.domain.Photo;
 

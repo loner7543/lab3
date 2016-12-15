@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.lab3.adapters.TimeRecordAdapter;
+import com.lab3.db.DbBitmapUtility;
 import com.lab3.db.DbUtils;
 import com.lab3.domain.Category;
 import com.lab3.domain.Photo;
@@ -87,7 +89,7 @@ public class TimeRecordActivity extends AppCompatActivity implements AdapterView
         int i = 0;
         List<Photo> photos = selectedRecord.getPhoto();
         for (Photo photo:photos){
-            SerialPhoto serialPhoto = new SerialPhoto(photo.getId(),DbBitmapUtility.getBytes(photo.getImage()));
+            SerialPhoto serialPhoto = new SerialPhoto(photo.getId(), DbBitmapUtility.getBytes(photo.getImage()));
             editedIntent.putExtra("photo"+i,serialPhoto);
         }
         i=0;

@@ -1,4 +1,4 @@
-package com.lab3;
+package com.lab3.db;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

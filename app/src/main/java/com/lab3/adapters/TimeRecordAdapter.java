@@ -1,4 +1,4 @@
-package com.lab3;
+package com.lab3.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 
+import com.lab3.R;
 import com.lab3.domain.Photo;
 import com.lab3.domain.TimeRecord;
 

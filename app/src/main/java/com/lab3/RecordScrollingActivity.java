@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.lab3.db.DbBitmapUtility;
 import com.lab3.db.DbUtils;
 import com.lab3.domain.Category;
 import com.lab3.domain.Photo;
