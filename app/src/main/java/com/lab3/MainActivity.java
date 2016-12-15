@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("Time Tracker sample");
         StatButton = (Button) findViewById(R.id.StatisticsButton);
         context = getApplicationContext();
         dbHelper = new DbUtils(this,DbUtils.DATABASE_NAME,DbUtils.DATABASE_VERSION);

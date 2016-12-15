@@ -17,6 +17,14 @@
          android:hint="@string/description"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content" />
+
+     <TextView
+         android:id="@+id/validationDescription"
+         android:layout_toRightOf="@+id/addDescription_text"
+         android:textColor="@color/red_color"
+         android:layout_marginLeft="20dp"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content" />
      <TextView
          android:text="Выберите категорию"
          android:layout_below="@+id/addDescription_text"
@@ -73,6 +81,16 @@
          android:id="@+id/segment_EditText"
          android:layout_below="@+id/endPicker"
          android:hint="Введите значение отрезка времени"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content" />
+
+     <TextView
+         android:id="@+id/validationSegment"
+         android:layout_below="@+id/endPicker"
+         android:textColor="@color/red_color"
+         android:layout_marginLeft="20dp"
+         android:layout_toRightOf="@+id/segment_EditText"
+         android:layout_alignBottom="@+id/segment_EditText"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content" />
 

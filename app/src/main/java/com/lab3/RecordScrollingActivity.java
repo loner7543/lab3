@@ -15,7 +15,9 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.lab3.db.DbUtils;
 import com.lab3.domain.Category;
@@ -78,6 +80,10 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
     private Bitmap bitmap;
     private Calendar fromCalendar;
     private Calendar toCalendar;
+    private  Toast toast;
+    private String [] userData;//то что введет пользователь = отправим на валиацию
+    private TextView validateDescriptionText;
+    private TextView ValidationSegmentText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +102,10 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
         allCategories = utils.parseCursor(utils.getAllRecords(database,DbUtils.CATEGORY_TABLE));
         fromDatePicker = (DatePicker) findViewById(R.id.fromDp);
         toDatePicker = (DatePicker) findViewById(R.id.toDp);
+        validateDescriptionText = (TextView) findViewById(R.id.validationDescription);
+        ValidationSegmentText = (TextView) findViewById(R.id.validationSegment);
 
+        userData = new String[2];
         spinner = (Spinner) findViewById(R.id.spinnerCategory);
         adapter = new ArrayAdapter<Category>(this, android.R.layout.simple_spinner_item, allCategories);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -142,6 +151,8 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
     }
 
     public void onAddData(View view){
+        ValidationSegmentText.setText("");
+        validateDescriptionText.setText("");
         fromCalendar = Calendar.getInstance();
         toCalendar = Calendar.getInstance();
 
@@ -169,30 +180,48 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
 
         String  description = descriptionEdit.getText().toString();
         String segment = segmentEdit.getText().toString();
-        validate(segment);
-        TimeRecord newDaata = new TimeRecord(fromDate.getTime(),toDate.getTime(),description,selectedCategory,selectedListPhotos,segment);
-        utils.insertTimeRecord(database,newDaata);
-        intent = new Intent();
-        newDaata.setPhoto(null);
-        intent.putExtra("data",newDaata);
-        int i = 0;
-        for (Photo photo:selectedListPhotos){
-           SerialPhoto serialPhoto = new SerialPhoto(photo.getId(),DbBitmapUtility.getBytes(photo.getImage()));
-            intent.putExtra("photo"+i,serialPhoto);
+        userData[0] = segment;
+        userData[1] = description;
+        if (validate()){
+            TimeRecord newDaata = new TimeRecord(fromDate.getTime(),toDate.getTime(),description,selectedCategory,selectedListPhotos,segment);
+            utils.insertTimeRecord(database,newDaata);
+            intent = new Intent();
+            newDaata.setPhoto(null);
+            intent.putExtra("data",newDaata);
+            int i = 0;
+            for (Photo photo:selectedListPhotos){
+                SerialPhoto serialPhoto = new SerialPhoto(photo.getId(),DbBitmapUtility.getBytes(photo.getImage()));
+                intent.putExtra("photo"+i,serialPhoto);
+            }
+            intent.putExtra("count",selectedListPhotos.size());
+            setResult(RESULT_OK, intent);
+            finish();
         }
-        intent.putExtra("count",selectedListPhotos.size());
-        setResult(RESULT_OK, intent);
-        finish();
+        else {
+            Toast.makeText(this,"Данные не прошли валидацию",Toast.LENGTH_LONG);
+        }
     }
 
-    public String getDate(int year,int month,int day,int hour,int minute ){
-        String s = String.valueOf(year)+"-"+String.valueOf(month)+"-"+String.valueOf(day)+" "+String.valueOf(hour)+":"+String.valueOf(minute);
-        return s;
-    }
-
-    public boolean validate(String segmnt){
-        boolean f = NumberUtils.isDigits(segmnt);
-        return false;
+    public boolean validate(){
+        boolean res = true;
+        boolean f = NumberUtils.isDigits(userData[0]);
+        if (!f){
+            ValidationSegmentText.setText("Значение отрезка не явялется числом");
+            res = false;
+        }
+        if (userData[0].isEmpty()){
+            ValidationSegmentText.setText("Отрезок времени не введен");
+            res = false;
+        }
+        if (userData[1].isEmpty()){
+            validateDescriptionText.setText("Описание не введено");
+            res = false;
+        }
+        if (userData[1].length()>20){
+            validateDescriptionText.setText("Длина описания превышает 20 символов");
+            res = false;
+        }
+        return res;
     }
 
     @Override

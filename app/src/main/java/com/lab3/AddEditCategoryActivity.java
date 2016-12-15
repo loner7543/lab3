@@ -12,6 +12,9 @@ import android.widget.Toast;
 
 import com.lab3.db.DbUtils;
 import com.lab3.domain.Category;
+
+import java.util.List;
+
 public class AddEditCategoryActivity extends AppCompatActivity {
     private EditText categoryEditText;
     private DbUtils utils;
@@ -22,6 +25,7 @@ public class AddEditCategoryActivity extends AppCompatActivity {
     private Toast toast;
     private Category selectedCategory;
     private int action;
+    private List<Category> allRecords;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,7 @@ public class AddEditCategoryActivity extends AppCompatActivity {
             selectedCategory = (Category) textIntent.getSerializableExtra("edited");
             categoryEditText.setText(selectedCategory.getCategoryName());
         }
+        allRecords = utils.getall(database,DbUtils.CATEGORY_TABLE);
     }
 
     public void onAddCategory(View view){
@@ -79,11 +84,24 @@ public class AddEditCategoryActivity extends AppCompatActivity {
     }
 
     public boolean categoryValidation(String s){
+        boolean result  = true;
         if (s.isEmpty()){
            toast =  Toast.makeText(this,"Category is empty",Toast.LENGTH_LONG);
             toast.show();
-            return false;
+            result = false;
         }
-        else return true;
+        if (s.length()>10){
+            toast =  Toast.makeText(this,"Category is empty",Toast.LENGTH_LONG);
+            toast.show();
+            result = false;
+        }
+        for (Category category:allRecords){
+            if (category.getCategoryName().equals(s)){
+                Toast toast = Toast.makeText(this,"Категория с таким названием уже существует в бд",Toast.LENGTH_LONG);
+                toast.show();
+                result = false;
+            }
+        }
+        return result;
     }
 }

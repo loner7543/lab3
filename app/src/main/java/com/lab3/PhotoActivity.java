@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.lab3.db.DbUtils;
 import com.lab3.domain.Photo;
@@ -76,23 +77,38 @@ public class PhotoActivity extends AppCompatActivity implements AdapterView.OnIt
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
        switch (requestCode){
            case CAMERA_RESULT_ADD:{
-               Bitmap thumbnailBitmap = (Bitmap) data.getExtras().get("data");
-               utils.insertCameraImage(database,thumbnailBitmap);
-               allPhoto.add(new Photo(thumbnailBitmap));
-               adapter.notifyDataSetChanged();
-               break;
+               try{
+                   Bitmap thumbnailBitmap = (Bitmap) data.getExtras().get("data");
+                   utils.insertCameraImage(database,thumbnailBitmap);
+                   allPhoto.add(new Photo(thumbnailBitmap));
+                   adapter.notifyDataSetChanged();
+                   break;
+               }
+               catch (NullPointerException e){
+                   Toast toast = Toast.makeText(this,"Добавление было отменено пользователем",Toast.LENGTH_LONG);
+                   toast.show();
+                   break;
+               }
            }
            case CAMERA_EDIT_PHOTO:{
-               Bitmap thumbnailBitmap = (Bitmap) data.getExtras().get("data");
-               Photo photo = new Photo(thumbnailBitmap,selectedPhoto.getId());
-               ContentValues contentValues = new ContentValues();
-               contentValues.put(utils.PHOTO_ID,photo.getId());
-               contentValues.put(utils.IMAGE,DbBitmapUtility.getBytes(thumbnailBitmap));
-               utils.update(database,utils.PHOTO_TABLE,contentValues,utils.PHOTO_ID,new String[]{String.valueOf(photo.getId())});
-               allPhoto.remove(selectedPhoto);
-               allPhoto.add(photo);
-               adapter.notifyDataSetChanged();
-               break;
+               try{
+                   Bitmap thumbnailBitmap = (Bitmap) data.getExtras().get("data");
+                   Photo photo = new Photo(thumbnailBitmap,selectedPhoto.getId());
+                   ContentValues contentValues = new ContentValues();
+                   contentValues.put(utils.PHOTO_ID,photo.getId());
+                   contentValues.put(utils.IMAGE,DbBitmapUtility.getBytes(thumbnailBitmap));
+                   utils.update(database,utils.PHOTO_TABLE,contentValues,utils.PHOTO_ID,new String[]{String.valueOf(photo.getId())});
+                   allPhoto.remove(selectedPhoto);
+                   allPhoto.add(photo);
+                   adapter.notifyDataSetChanged();
+                   break;
+               }
+               catch (NullPointerException e){
+                   Toast toast = Toast.makeText(this,"Редактирование было отменено пользователем",Toast.LENGTH_LONG);
+                   toast.show();
+                   break;
+               }
+
            }
 
         }
