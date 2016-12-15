@@ -81,7 +81,7 @@ public class DbUtils extends SQLiteOpenHelper {
             "\t`time_id_ref`\tINTEGER,\n" +
             "\t`photo_id_ref`\tINTEGER, \n" +
             " FOREIGN KEY(time_id_ref) REFERENCES Category(id) ON UPDATE CASCADE on delete cascade,\n"+
-            "FOREIGN KEY(photo_id_ref) REFERENCES Photo(id) ON UPDATE CASCADE"+
+            "FOREIGN KEY(photo_id_ref) REFERENCES Photo(id) ON UPDATE CASCADE on delete cascade"+
             ");";
 
 
@@ -461,6 +461,7 @@ public class DbUtils extends SQLiteOpenHelper {
         contentValues.put(START_TIME,newRecord.getStartDate());
         contentValues.put(END_TIME,newRecord.getEndDate());
         contentValues.put(TIME_SEGMENT,newRecord.getOtr());
+     //   database.up
         return 0;
     }
 
