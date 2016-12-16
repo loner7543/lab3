@@ -69,7 +69,7 @@ public class TimeRecordScrollingActivity extends AppCompatActivity implements Ad
         recordListView.setOnItemClickListener(this);
         recordListView.setAdapter(adapter);
 
-        //загружаю все категории
+
         allCategory = utils.parseCursor(utils.getAllRecords(database,DbUtils.CATEGORY_TABLE));
         categoryAdapter = new ArrayAdapter<Category>(this,
                 android.R.layout.simple_list_item_1, allCategory);
@@ -103,6 +103,7 @@ public class TimeRecordScrollingActivity extends AppCompatActivity implements Ad
             i=0;
             selectedRecord.setPhoto(null);
             editedIntent.putExtra("data",selectedRecord);
+            editedIntent.putExtra("OldId",selectedRecord.getId());
             editedIntent.putExtra("count",photos.size());
             startActivityForResult(editedIntent,EDIT_TIME_RECORD_CODE);
         }
@@ -159,7 +160,6 @@ public class TimeRecordScrollingActivity extends AppCompatActivity implements Ad
                         i++;
                     }
                     editedRecord.setPhoto(newPhotos);
-                    allRecords.remove(selectedRecord);
                     allRecords.add(editedRecord);
                     break;
                 }

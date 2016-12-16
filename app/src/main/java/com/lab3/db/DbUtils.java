@@ -310,10 +310,11 @@ public class DbUtils extends SQLiteOpenHelper {
         database.insert(TIME_RECORD_TABLE,null,contentValues6);*/
     }
 
+    //TODO Брать фото по iD запси времени
     public List<TimeRecord> getAllTimes(SQLiteDatabase database){
         List<TimeRecord> res = new LinkedList<>();
         TimeRecord timeRecord;
-        List<Photo> photoRecord = new LinkedList<>();
+        List<Photo> photoRecords = new LinkedList<>();
         int i = 0;
         int IdIdx,descriptionIndex,startDateIdx,endDateIdx,segmentIdx,categoryIdx;
         int iDval,categoryId;
@@ -335,8 +336,8 @@ public class DbUtils extends SQLiteOpenHelper {
                 segment = cursor.getString(segmentIdx);
                 categoryId = cursor.getInt(categoryIdx);
                 Category c = getCategoryById(database,categoryId);
-                photoRecord = getPhotoListByCatogory(database,c);
-                timeRecord = new TimeRecord(iDval,startDate,endDate,descValue,c,segment,photoRecord);
+                photoRecords = getPhotoListByTimeRecordId(database,iDval);
+                timeRecord = new TimeRecord(iDval,startDate,endDate,descValue,c,segment,photoRecords);
                 res.add(timeRecord);
                 i++;
             }
@@ -344,6 +345,14 @@ public class DbUtils extends SQLiteOpenHelper {
             cursor.close();
         }
         return res;
+    }
+
+    // TODO Дописать и ее
+    public void updateRazv(SQLiteDatabase database,int photoId,int TimeRecordId){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(PHOTO_ID_REF,photoId);
+        String whereCause = TIME_ID_REF+" =?";
+      int updCount =   database.update(TIME_PHOTO_TABLE,contentValues,whereCause,new  String[]{String.valueOf(TimeRecordId)});
     }
 
     public Category getCategoryById(SQLiteDatabase database,int id){
@@ -367,14 +376,16 @@ public class DbUtils extends SQLiteOpenHelper {
         return category;
     }
 
-    public List<Photo> getPhotoListByCatogory(SQLiteDatabase database, Category category) {
+    //TODO Переписатьb!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    public List<Photo> getPhotoListByTimeRecordId(SQLiteDatabase database,int TimeId) {
         List<Photo> photosByCategory = new LinkedList<>();
-        Cursor cursor = database.query(TIME_PHOTO_TABLE, null, TIME_ID_REF + "=?", new String[]{String.valueOf(category.getId())}, null, null, null);
+        Cursor cursor = database.query(TIME_PHOTO_TABLE, null, TIME_ID_REF + "=?", new String[]{String.valueOf(TimeId)}, null, null, null);
         int idCategoryIdx;
         int idPhotoIdx;
         int i = 0;
         Photo photo;
         int idValCategory,idValProtoID;
+         boolean state = cursor.moveToFirst();
         if (cursor != null && cursor.moveToFirst()) {
             idCategoryIdx = cursor.getColumnIndex(DbUtils.TIME_ID_REF);
             idPhotoIdx = cursor.getColumnIndex(DbUtils.PHOTO_ID_REF);
@@ -435,6 +446,7 @@ public class DbUtils extends SQLiteOpenHelper {
         return lst;
     }
 
+    // TODO переписать его
     public void insertTimeRecord(SQLiteDatabase database,TimeRecord record){
         ContentValues contentValues = new ContentValues();
         ContentValues cvR;
@@ -443,15 +455,31 @@ public class DbUtils extends SQLiteOpenHelper {
         contentValues.put(START_TIME,record.getStartDate());
         contentValues.put(END_TIME,record.getEndDate());
         contentValues.put(TIME_SEGMENT,record.getOtr());
+        database.insert(TIME_RECORD_TABLE,null,contentValues);
         //добавляем данные в табл развязку
         List<Photo> photos = record.getPhoto();
         for (Photo p:photos){
             cvR = new ContentValues();
-            cvR.put(TIME_ID_REF,record.getCategory().getId());
+            cvR.put(TIME_ID_REF,getNextId(database));
             cvR.put(PHOTO_ID_REF,p.getId());
             database.insert(TIME_PHOTO_TABLE,null,cvR);
         }
-        database.insert(TIME_RECORD_TABLE,null,contentValues);
+    }
+
+    //беерт id у последней записси, что вставить его в развязку
+    public int getNextId(SQLiteDatabase database){
+        int res = 0;
+        sqlQuery="SELECT * FROM "+TIME_RECORD_TABLE+" WHERE " +TIME_ID+" = (SELECT MAX("+TIME_ID+")  FROM "+TIME_RECORD_TABLE+")";
+        Cursor cursor = database.rawQuery(sqlQuery,null);
+        int idIdx;
+        int IdVal = 0;
+        if (cursor != null && cursor.moveToFirst()) {
+             idIdx = cursor.getColumnIndex(DbUtils.TIME_ID);
+            IdVal = cursor.getInt(idIdx);
+            }
+        res = IdVal;
+        cursor.close();
+        return  res;
     }
 
     public int deleteTimeRecord(SQLiteDatabase database, int recordId){
@@ -459,14 +487,28 @@ public class DbUtils extends SQLiteOpenHelper {
         return res;
     }
 
-    public int updateTimeRecord(TimeRecord oldRecord,TimeRecord newRecord,SQLiteDatabase database){
+    public int updateTimeRecord(int oldId,TimeRecord newRecord,SQLiteDatabase database,boolean pphotoIsNull){
         ContentValues contentValues = new ContentValues();
         contentValues.put(DDESCRIPTION,newRecord.getDescription());
         contentValues.put(START_TIME,newRecord.getStartDate());
         contentValues.put(END_TIME,newRecord.getEndDate());
         contentValues.put(TIME_SEGMENT,newRecord.getOtr());
-     //   database.up
-        return 0;
+        String whereCause= TIME_ID+" =?";
+        int updCount =  database.update(TIME_RECORD_TABLE,contentValues,whereCause,new String[]{String.valueOf(oldId)});
+        if (pphotoIsNull){
+            for (Photo photo:newRecord.getPhoto()){
+                ContentValues razvCV = new ContentValues();
+                contentValues.put(PHOTO_ID_REF,photo.getId());
+                contentValues.put(TIME_ID_REF,oldId);
+                database.insert(TIME_PHOTO_TABLE,null,razvCV);
+            }
+        }
+        else {
+            for (Photo photo:newRecord.getPhoto()){
+                updateRazv(database,photo.getId(),oldId);
+            }
+        }
+        return updCount;
     }
 
     /**

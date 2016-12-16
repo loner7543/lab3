@@ -154,6 +154,7 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
     }
 
     public void onAddData(View view){
+        int action = dataIntent.getIntExtra("Action",5);
         ValidationSegmentText.setText("");
         validateDescriptionText.setText("");
         ValidationDateText.setText("");
@@ -188,7 +189,24 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
         userData[1] = description;
         if (validate()){
             TimeRecord newDaata = new TimeRecord(fromDate.getTime(),toDate.getTime(),description,selectedCategory,selectedListPhotos,segment);
-            utils.insertTimeRecord(database,newDaata);
+            switch (action){
+                case TimeRecordScrollingActivity.REQUEST_CODE_REFRESH:{
+                    utils.insertTimeRecord(database,newDaata);
+                    break;
+                }
+                case TimeRecordScrollingActivity.EDIT_TIME_RECORD_CODE:{
+                    int oldId = dataIntent.getIntExtra("OldId",0);
+                    int photoCount = dataIntent.getIntExtra("count",100);
+                    if (photoCount==0){
+                        utils.updateTimeRecord(oldId,newDaata,database,true);
+                    }
+                    else {
+                        utils.updateTimeRecord(oldId,newDaata,database,false);
+                    }
+
+                    break;
+                }
+            }
             intent = new Intent();
             newDaata.setPhoto(null);
             intent.putExtra("data",newDaata);
