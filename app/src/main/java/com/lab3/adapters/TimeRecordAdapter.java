@@ -60,7 +60,6 @@ public class TimeRecordAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         View row = view;
-        if (row==null){
             row = inflater.inflate(LayResId,viewGroup,false);
             TimeRecord record = getRecord(i);
 
@@ -88,7 +87,6 @@ public class TimeRecordAdapter extends BaseAdapter {
                 imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
                 linearLayout.addView(imageView);
             }
-        }
         return row;
     }
 

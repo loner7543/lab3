@@ -196,7 +196,9 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
             for (Photo photo:selectedListPhotos){
                 SerialPhoto serialPhoto = new SerialPhoto(photo.getId(),DbBitmapUtility.getBytes(photo.getImage()));
                 intent.putExtra("photo"+i,serialPhoto);
+                i++;
             }
+            i=0;
             intent.putExtra("count",selectedListPhotos.size());
             setResult(RESULT_OK, intent);
             finish();
