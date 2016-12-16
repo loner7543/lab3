@@ -490,6 +490,7 @@ public class DbUtils extends SQLiteOpenHelper {
     public int updateTimeRecord(int oldId,TimeRecord newRecord,SQLiteDatabase database,boolean pphotoIsNull){
         ContentValues contentValues = new ContentValues();
         contentValues.put(DDESCRIPTION,newRecord.getDescription());
+        contentValues.put(CATEGORY_ID_REF,newRecord.getCategory().getId());
         contentValues.put(START_TIME,newRecord.getStartDate());
         contentValues.put(END_TIME,newRecord.getEndDate());
         contentValues.put(TIME_SEGMENT,newRecord.getOtr());

@@ -33,4 +33,9 @@ public class TimeCategory implements Serializable {
     public void setCategory(Category category) {
         this.category = category;
     }
+
+    @Override
+    public String toString() {
+        return category.getCategoryName();
+    }
 }

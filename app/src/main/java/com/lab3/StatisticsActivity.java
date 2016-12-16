@@ -24,6 +24,7 @@ import com.androidplot.pie.PieChart;
 import com.androidplot.pie.PieRenderer;
 import com.androidplot.pie.Segment;
 import com.androidplot.pie.SegmentFormatter;
+import com.lab3.adapters.FreqAdapter;
 import com.lab3.adapters.MonthAdapter;
 import com.lab3.adapters.TimePerCategoryAdapter;
 import com.lab3.db.DbUtils;
@@ -199,7 +200,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
                     else return 1;
                 }
             });
-            TimePerCategoryAdapter adapter = new TimePerCategoryAdapter(data,getApplicationContext(),R.layout.category_time);
+            FreqAdapter adapter = new FreqAdapter(getApplicationContext(),R.layout.freq_item,data);
             frequent_sessions.setAdapter(adapter);
         }
 
@@ -341,5 +342,11 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
             }
         }
         return res;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        adapter = null;
     }
 }
