@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseBooleanArray;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
@@ -15,6 +16,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -82,6 +84,8 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
     private MonthAdapter monthAdapter;
     private List<AppMonth> months;
     private AppMonth selectedMonth;
+    private TextView ValidationDateStatistics;
+    private TextView ValidationHoursTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +126,8 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         MonthSpinner = (Spinner) findViewById(R.id.months);
         MonthSpinner.setAdapter(monthAdapter);
         MonthSpinner.setOnItemSelectedListener(this);
+        ValidationDateStatistics = (TextView) findViewById(R.id.ValidateStatDate);
+        ValidationHoursTextView = (TextView) findViewById(R.id.ValidationStstisticsHour);
         drawPie();
     }
 
@@ -149,6 +155,9 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
 
     //ревлизация не совсем ок - кидаю даты на др активити и там делаю запрос  используя их
     public void onShowSortList(View view){
+        ValidationDateStatistics.setText("");
+        ValidationHoursTextView.setText("");
+
         MonthSpinner.setEnabled(true);
         toDatePicker.setEnabled(true);
         fromDatePicker.setEnabled(true);
@@ -156,12 +165,17 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         fromTimePicker.setEnabled(true);
         Intent intent = new Intent(this,SortActivity.class);
         setDate();
-        intent.putExtra("startDate",startDate);
-        intent.putExtra("endDate",endDate);
-        startActivity(intent);
+        if (validate()){
+            intent.putExtra("startDate",startDate);
+            intent.putExtra("endDate",endDate);
+            startActivity(intent);
+        }
+
     }
 
     public void onShowFreqList(View view){
+        ValidationDateStatistics.setText("");
+        ValidationHoursTextView.setText("");
         MonthSpinner.setEnabled(true);
 
         toDatePicker.setEnabled(true);
@@ -169,26 +183,31 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         toTomePicker.setEnabled(true);
         fromTimePicker.setEnabled(true);
         setDate();
-        List<TimeCategory> data = new LinkedList<>();
-        for (Category category:allCategories){
-            TimeCategory timeCategory = new TimeCategory(category,utils.getCountRecordFromCategory(database,category,startDate,endDate));
-            data.add(timeCategory);
+        if (validate()){
+            List<TimeCategory> data = new LinkedList<>();
+            for (Category category:allCategories){
+                TimeCategory timeCategory = new TimeCategory(category,utils.getCountRecordFromCategory(database,category,startDate,endDate));
+                data.add(timeCategory);
+            }
+
+            Collections.sort(data, new Comparator<TimeCategory>() {
+                @Override
+                public int compare(TimeCategory timeCategory, TimeCategory t1) {
+                    if(timeCategory.getSegmentValue()>t1.getSegmentValue()){
+                        return -1;
+                    }
+                    else return 1;
+                }
+            });
+            TimePerCategoryAdapter adapter = new TimePerCategoryAdapter(data,getApplicationContext(),R.layout.category_time);
+            frequent_sessions.setAdapter(adapter);
         }
 
-        Collections.sort(data, new Comparator<TimeCategory>() {
-            @Override
-            public int compare(TimeCategory timeCategory, TimeCategory t1) {
-                if(timeCategory.getSegmentValue()>t1.getSegmentValue()){
-                    return -1;
-                }
-                else return 1;
-            }
-        });
-        TimePerCategoryAdapter adapter = new TimePerCategoryAdapter(data,getApplicationContext(),R.layout.category_time);
-        frequent_sessions.setAdapter(adapter);
     }
 
     public void onShowListStat(View view){
+        ValidationDateStatistics.setText("");
+        ValidationHoursTextView.setText("");
         MonthSpinner.setEnabled(true);
 
         toDatePicker.setEnabled(true);
@@ -307,5 +326,20 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         months.add(new AppMonth("Октябрь",9));
         months.add(new AppMonth("Ноябрь",10));
         months.add(new AppMonth("Декабпь",11));
+    }
+
+    public boolean validate(){
+        boolean res = true;
+        if (fromYear>toYear){
+            ValidationDateStatistics.setText("Дата введена неверно");
+            res = false;
+        }
+        if (fromYear==toYear){//год один и тот же но часы неверно
+            if (fronHour>toHour){
+                ValidationHoursTextView.setText("Часы установлены неверно");
+                res = false;
+            }
+        }
+        return res;
     }
 }

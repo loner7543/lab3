@@ -115,12 +115,18 @@
          android:verticalSpacing="5dp"
          android:focusable="true"
          android:clickable="true"/>
+     <TextView
+         android:textColor="@color/red_color"
+         android:id="@+id/dateValidation"
+         android:layout_below="@+id/gridView"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content" />
 
      <Button
          android:id="@+id/addRecord"
          android:text="Добавить запись"
          android:onClick="onAddData"
-         android:layout_below="@+id/gridView"
+         android:layout_below="@+id/dateValidation"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content" />
  </RelativeLayout>

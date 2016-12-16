@@ -85,6 +85,7 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
     private String [] userData;//то что введет пользователь = отправим на валиацию
     private TextView validateDescriptionText;
     private TextView ValidationSegmentText;
+    private TextView ValidationDateText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +106,7 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
         toDatePicker = (DatePicker) findViewById(R.id.toDp);
         validateDescriptionText = (TextView) findViewById(R.id.validationDescription);
         ValidationSegmentText = (TextView) findViewById(R.id.validationSegment);
+        ValidationDateText = (TextView) findViewById(R.id.dateValidation);
 
         userData = new String[2];
         spinner = (Spinner) findViewById(R.id.spinnerCategory);
@@ -154,6 +156,7 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
     public void onAddData(View view){
         ValidationSegmentText.setText("");
         validateDescriptionText.setText("");
+        ValidationDateText.setText("");
         fromCalendar = Calendar.getInstance();
         toCalendar = Calendar.getInstance();
 
@@ -220,6 +223,10 @@ public class RecordScrollingActivity extends AppCompatActivity implements Compar
         }
         if (userData[1].length()>20){
             validateDescriptionText.setText("Длина описания превышает 20 символов");
+            res = false;
+        }
+        if ((fromYear>toYear)||(startHour>endHour)){
+            ValidationDateText.setText("Дата или время  введены неверно");
             res = false;
         }
         return res;
