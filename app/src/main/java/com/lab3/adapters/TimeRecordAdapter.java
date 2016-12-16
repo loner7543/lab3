@@ -18,6 +18,7 @@ import com.lab3.domain.TimeRecord;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,17 +30,15 @@ public class TimeRecordAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private Context ctx;
     private  int LayResId;
-    private DateFormat df;
-    private  DateFormat dfISO = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-    private Calendar calendar;
+    private  DateFormat dfISO;
+    private Date date;
 
     public TimeRecordAdapter(Context context, int resource, List<TimeRecord> objects) {
         this.ctx =context;
         this.LayResId = resource;
         this.data = objects;
         inflater = (LayoutInflater) context .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        df = new SimpleDateFormat("dd/MM/yyyy");
-        calendar = Calendar.getInstance();
+        dfISO = new  SimpleDateFormat("dd-MM-yy:HH:mm");
     }
 
     @Override
@@ -67,15 +66,15 @@ public class TimeRecordAdapter extends BaseAdapter {
             meetName.setText(record.getDescription());
 
             TextView startDate = (TextView) row.findViewById(R.id.start_time_value);
-            calendar.setTimeInMillis(record.getStartDate());
-            startDate.setText(getDate(calendar.YEAR,calendar.MONTH,calendar.DAY_OF_MONTH,calendar.HOUR,calendar.MINUTE));
+            date = new Date(record.getStartDate());
+            startDate.setText(dfISO.format(date));
 
             TextView catrgory = (TextView) row.findViewById(R.id.category_value);
             catrgory.setText(record.getCategory().getCategoryName());
 
             TextView endTime = (TextView) row.findViewById(R.id.etv);
-            calendar.setTimeInMillis(record.getEndDate());
-            endTime.setText(getDate(calendar.YEAR,calendar.MONTH,calendar.DAY_OF_MONTH,calendar.HOUR,calendar.MINUTE));
+            date = new Date(record.getEndDate());
+            endTime.setText(dfISO.format(date));
 
             TextView segment = (TextView) row.findViewById(R.id.segment_value);
             segment.setText(record.getOtr());
@@ -92,10 +91,5 @@ public class TimeRecordAdapter extends BaseAdapter {
 
     public TimeRecord getRecord(int Position){
         return (TimeRecord) getItem(Position);
-    }
-
-    public String getDate(int year,int month,int day,int hour,int minute ) {
-        String s = String.valueOf(year) + "-" + String.valueOf(month) + "-" + String.valueOf(day) + " " + String.valueOf(hour) + ":" + String.valueOf(minute);
-        return s;
     }
 }
