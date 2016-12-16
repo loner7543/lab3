@@ -498,8 +498,8 @@ public class DbUtils extends SQLiteOpenHelper {
         if (pphotoIsNull){
             for (Photo photo:newRecord.getPhoto()){
                 ContentValues razvCV = new ContentValues();
-                contentValues.put(PHOTO_ID_REF,photo.getId());
-                contentValues.put(TIME_ID_REF,oldId);
+                razvCV.put(PHOTO_ID_REF,photo.getId());
+                razvCV.put(TIME_ID_REF,oldId);
                 database.insert(TIME_PHOTO_TABLE,null,razvCV);
             }
         }

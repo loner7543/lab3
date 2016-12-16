@@ -161,6 +161,7 @@ public class TimeRecordScrollingActivity extends AppCompatActivity implements Ad
                     }
                     editedRecord.setPhoto(newPhotos);
                     allRecords.add(editedRecord);
+                    adapter.notifyDataSetChanged();
                     break;
                 }
                 default:{
