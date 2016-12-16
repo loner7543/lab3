@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import com.lab3.adapters.PhotoAdapter;
 import com.lab3.db.DbBitmapUtility;
 import com.lab3.db.DbUtils;
 import com.lab3.domain.Photo;
+import com.lab3.domain.SerialPhoto;
 
 import java.util.List;
 
@@ -28,7 +30,7 @@ public class PhotoActivity extends AppCompatActivity implements AdapterView.OnIt
     private SQLiteDatabase database;
     private DbUtils utils;
     private List<Photo> allPhoto;
-    private ListView phtoListView;
+    private GridView phtoListView;
     private Photo selectedPhoto;
     private PhotoAdapter adapter;
     //context.getResources(), R.drawable.intellj
@@ -41,7 +43,7 @@ public class PhotoActivity extends AppCompatActivity implements AdapterView.OnIt
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         context = getApplicationContext();
-        phtoListView = (ListView) findViewById(R.id.photoList);
+        phtoListView = (GridView) findViewById(R.id.photo_grid);
         utils = new DbUtils(this, DbUtils.DATABASE_NAME, DbUtils.DATABASE_VERSION);
         database = utils.getWritableDatabase();//дает бд на запись
        // utils.initPhotoTable(database,R.drawable.intellj,context); //работает - фотка в бду же есть
@@ -74,7 +76,6 @@ public class PhotoActivity extends AppCompatActivity implements AdapterView.OnIt
         selectedPhoto = adapter.getPhoto(i);
     }
 
-    //TODO пока не установил ID - ксли надо будет менять фото через камеру - сделаю
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
        switch (requestCode){

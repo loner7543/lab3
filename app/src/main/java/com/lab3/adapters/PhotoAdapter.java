@@ -56,12 +56,10 @@ public class PhotoAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View convertView, ViewGroup viewGroup) {
         View row = convertView;
-        if (row==null){
             row = inflater.inflate(LayResId,viewGroup,false);
             Photo currMeet = getPhoto(i);
             ImageView meetName = (ImageView) row.findViewById(R.id.bmp);
             meetName.setImageBitmap(currMeet.getImage());
-        }
         return row;
     }
 

@@ -13,24 +13,23 @@
     tools:context="com.lab3.PhotoActivity"
     tools:showIn="@layout/activity_photo">
 
-    <ListView
-        android:id="@+id/photoList"
+    <GridView
+        android:id="@+id/photo_grid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-
-    </ListView>
+    </GridView>
 
     <Button
         android:id="@+id/addPhoto"
         android:text="@string/add_btn"
         android:onClick="onAddPhoto"
-        android:layout_below="@+id/photoList"
+        android:layout_below="@+id/photo_grid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/editPhoto"
-        android:layout_below="@+id/photoList"
+        android:layout_below="@+id/photo_grid"
         android:layout_toRightOf="@+id/addPhoto"
         android:onClick="onEditPhoto"
         android:text="@string/editBtn"
@@ -40,7 +39,7 @@
 
     <Button
         android:id="@+id/deletePhoto"
-        android:layout_below="@+id/photoList"
+        android:layout_below="@+id/photo_grid"
         android:layout_toRightOf="@+id/editPhoto"
         android:onClick="onDeletePhoto"
         android:text="@string/delete_btn"
