@@ -23,6 +23,7 @@ import com.lab3.domain.SerialPhoto;
 
 import java.util.List;
 
+//фото хранится в бд как BLOB . Не получится сохранить фтографии с большим разрешением
 public class PhotoActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     private final int CAMERA_RESULT_ADD = 0;
     private final int CAMERA_EDIT_PHOTO = 1;
@@ -46,7 +47,7 @@ public class PhotoActivity extends AppCompatActivity implements AdapterView.OnIt
         phtoListView = (GridView) findViewById(R.id.photo_grid);
         utils = new DbUtils(this, DbUtils.DATABASE_NAME, DbUtils.DATABASE_VERSION);
         database = utils.getWritableDatabase();//дает бд на запись
-       // utils.initPhotoTable(database,R.drawable.intellj,context); //работает - фотка в бду же есть
+       // utils.initPhotoTable(database,R.drawable.intellj,context); //работает - фотка в бду же есть//вставляет фото
        //utils.initPhotoTable(database,R.drawable.git,context); //работает - фотка в бду же есть
 
         allPhoto = utils.getAllPhoto(database);

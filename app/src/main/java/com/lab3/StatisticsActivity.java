@@ -331,7 +331,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
 
     public boolean validate(){
         boolean res = true;
-        if (fromYear>toYear){
+       /* if (fromYear>toYear){
             ValidationDateStatistics.setText("Дата введена неверно");
             res = false;
         }
@@ -340,7 +340,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
                 ValidationHoursTextView.setText("Часы установлены неверно");
                 res = false;
             }
-        }
+        }*/
         return res;
     }
 

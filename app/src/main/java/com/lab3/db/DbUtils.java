@@ -89,10 +89,12 @@ public class DbUtils extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    //Методы ниже вставляют категорию и инициализируют таблицу развязку
+    //Тут реализовано отношение многие ко многим между записью времени и фото
     @Override
     public void onCreate(SQLiteDatabase db) {//вызывается при созщдании бд
         Log.d(LOG_TAG,"Databse create called");
-        db.execSQL("PRAGMA foreign_keys=ON");
+        db.execSQL("PRAGMA foreign_keys=ON");//Активирует вторичные (FK) ключи
         db.execSQL(CREATE_CATEGORY_QUERY);
         db.execSQL(CREATE_PHOTO_QUERY);
         db.execSQL(CREATE_TIMERECORD_QUERY);
@@ -116,6 +118,7 @@ public class DbUtils extends SQLiteOpenHelper {
 
     }
 
+    //Вызываются когда бд не создана
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("drop table if exists "+CATEGORY_TABLE);
@@ -236,6 +239,7 @@ public class DbUtils extends SQLiteOpenHelper {
         sqlQuery = "";
     }
 
+    //Вставляет записи в таблицу времени
     public void initTimeTable(TimeRecord timeRecord,SQLiteDatabase database){
         calendar = Calendar.getInstance();
         calendar.set(2016,0,5,1,0);
@@ -310,7 +314,6 @@ public class DbUtils extends SQLiteOpenHelper {
         database.insert(TIME_RECORD_TABLE,null,contentValues6);*/
     }
 
-    //TODO Брать фото по iD запси времени
     public List<TimeRecord> getAllTimes(SQLiteDatabase database){
         List<TimeRecord> res = new LinkedList<>();
         TimeRecord timeRecord;
@@ -347,7 +350,6 @@ public class DbUtils extends SQLiteOpenHelper {
         return res;
     }
 
-    // TODO Дописать и ее
     public void updateRazv(SQLiteDatabase database,int photoId,int TimeRecordId){
         ContentValues contentValues = new ContentValues();
         contentValues.put(PHOTO_ID_REF,photoId);
@@ -376,7 +378,6 @@ public class DbUtils extends SQLiteOpenHelper {
         return category;
     }
 
-    //TODO Переписатьb!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     public List<Photo> getPhotoListByTimeRecordId(SQLiteDatabase database,int TimeId) {
         List<Photo> photosByCategory = new LinkedList<>();
         Cursor cursor = database.query(TIME_PHOTO_TABLE, null, TIME_ID_REF + "=?", new String[]{String.valueOf(TimeId)}, null, null, null);
@@ -446,7 +447,6 @@ public class DbUtils extends SQLiteOpenHelper {
         return lst;
     }
 
-    // TODO переписать его
     public void insertTimeRecord(SQLiteDatabase database,TimeRecord record){
         ContentValues contentValues = new ContentValues();
         ContentValues cvR;
@@ -525,7 +525,6 @@ public class DbUtils extends SQLiteOpenHelper {
         return res;
     }
 
-    //count и один и тот же селект
     public int pieData(SQLiteDatabase database,Category category){
         int res;
         String sql = "select sum(TIME_SEGMENT) from TimeRecord where CATEGORY_ID=?";
